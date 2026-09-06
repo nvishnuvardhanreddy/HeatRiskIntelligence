@@ -17,7 +17,18 @@
     clearError();
     $("location-message").textContent = "Fetching live weather and forecast…";
     try {
-      const current = await GZ.get("/api/risk/current/", location);
+      let current = await GZ.get("/api/risk/current/", location);
+      if (current.data_mode === "DEMO") {
+        try {
+          const browserLive = await GZ.getBrowserLiveWeather(location);
+          browserLive.location = current.location || location;
+          browserLive.population = current.population || {};
+          current = browserLive;
+          console.info("[GROUND ZERO] Replaced backend demo response with direct browser live weather.", location);
+        } catch (browserError) {
+          console.warn("[GROUND ZERO] Direct browser live recovery failed; retaining demo response.", browserError);
+        }
+      }
       renderCurrent(current);
       renderPopulation(current.population || {});
       let optionalStatus = current.data_mode === "DEMO"
@@ -37,8 +48,19 @@
       }
       $("location-message").textContent = optionalStatus;
     } catch (error) {
-      showError(error.message + " Live weather data is not replaced with demo values.");
-      $("location-message").textContent = "Try another location or try again shortly.";
+      try {
+        const live = await GZ.getBrowserLiveWeather(location);
+        live.location = location;
+        renderCurrent(live);
+        renderForecast(live.forecast);
+        console.info("[GROUND ZERO] Using direct browser live weather after backend recovery.", location);
+        $("location-message").textContent = "Updated from live Open-Meteo weather.";
+        clearError();
+      } catch (browserError) {
+        showError("Live weather is temporarily unavailable; showing demo data.", true);
+        $("location-message").textContent = "Try another location or try again shortly.";
+        console.warn("[GROUND ZERO] Live backend and browser recovery failed.", browserError);
+      }
     }
     function renderNearby(data) {
       const areas = data.areas || [], district = data.district || {};
