@@ -8,6 +8,34 @@
   <div class="overview-actions"><button id="overview-detect" class="button primary">Detect my location</button><a class="button quiet" href="/dashboard/">Explore live risk</a><a class="button quiet" href="/dashboard/#location-search">Search location</a></div>
   <p id="overview-status" class="muted" role="status">Live weather is fetched through the Django backend. No synthetic weather is displayed.</p>
 </section>
+<section class="search-panel" aria-label="Location search">
+  <p class="eyebrow">LOCATION SEARCH</p>
+  <label for="location-search">Search Indian cities, districts or states</label>
+  <div class="search-row"><input id="location-search" type="search" autocomplete="off" placeholder="Search location..."><button id="search-button" class="button">Search</button></div>
+  <div id="search-results" class="search-results" role="listbox"></div>
+  <div class="coordinate-row"><input id="latitude" inputmode="decimal" placeholder="Latitude"><input id="longitude" inputmode="decimal" placeholder="Longitude"><button id="coordinate-button" class="button quiet">Analyze location</button></div>
+</section>
+<div id="data-error" class="notice error" hidden role="alert"></div>
+<section class="dashboard-grid overview-live" aria-live="polite">
+  <div class="location-heading"><p class="eyebrow">SELECTED LOCATION</p><h2 id="location-name">—</h2><p id="location-detail" class="muted">Choose GPS, search, or coordinates to load live conditions.</p><p id="location-message" class="muted">No location selected.</p></div>
+  <article class="risk-card"><div class="card-top"><span>CURRENT HEAT RISK</span><span class="status calculated">CALCULATED</span></div><div class="score-line"><strong id="htsi-score">—</strong><span id="htsi-band">Awaiting data</span></div><div class="risk-progress"><span id="risk-progress"></span></div><p id="risk-reason" class="muted">HTSI is calculated from the selected location's thermal conditions.</p></article>
+  <div class="metric-grid">
+    <article class="metric"><span>Temperature</span><strong id="temperature">—</strong><small class="status live">LIVE</small></article>
+    <article class="metric"><span>Humidity</span><strong id="humidity">—</strong><small class="status live">LIVE</small></article>
+    <article class="metric"><span>Wind</span><strong id="wind">—</strong><small class="status live">LIVE</small></article>
+    <article class="metric"><span>Solar radiation</span><strong id="solar">—</strong><small id="solar-label" class="status estimated">ESTIMATED IF NEEDED</small></article>
+    <article class="metric"><span>Heat Index</span><strong id="heat-index">—</strong><small class="status calculated">CALCULATED</small></article>
+    <article class="metric"><span>WBGT</span><strong id="wbgt">—</strong><small class="status calculated">CALCULATED</small></article>
+    <article class="metric"><span>UTCI</span><strong id="utci">—</strong><small class="status calculated">CALCULATED</small></article>
+    <article class="metric"><span>Feels like</span><strong id="apparent-temperature">—</strong><small class="status live">LIVE</small></article>
+  </div>
+</section>
+<section class="two-column info-section">
+  <article class="panel"><p class="eyebrow">HEALTH RISK INTELLIGENCE</p><h2>Human impact signal</h2><p id="health-summary">Health-risk output is unavailable until a location is selected.</p><span class="status">ML ESTIMATE · NO CLINICAL CLAIM</span></article>
+  <article class="panel warning-panel"><p class="eyebrow">HEAT HEALTH WARNING</p><h2 id="warning-title">Waiting for live conditions</h2><p id="warning-text">Select a location to receive risk factors and practical safety guidance.</p><a class="button quiet" href="/alerts/">View heat-risk details</a></article>
+</section>
+<section class="info-section panel emergency-panel"><p class="eyebrow">HYPERLOCAL ACTION</p><h2>Emergency population targeting</h2><p>Population exposure figures are not shown without an authoritative dataset. Use the calculated risk level to guide local action and follow official advisories.</p><div class="tag-list"><span>Hydrate regularly</span><span>Take shade breaks</span><span>Reduce prolonged exposure</span><span>Check vulnerable people</span></div></section>
+<section class="info-section panel"><div class="section-heading"><div><p class="eyebrow">5-DAY HUMAN IMPACT OUTLOOK</p><h2>Daily forecast risk</h2></div><a class="text-link" href="/forecast/">Open full forecast →</a></div><div id="forecast-strip" class="forecast-strip"><div class="empty-state">Forecast data will load with a selected location.</div></div><canvas id="risk-chart" height="120" aria-label="Five-day HTSI chart"></canvas></section>
 <section class="info-section overview-grid">
   <article class="panel"><p class="eyebrow">THE PROBLEM</p><h2>Heat is more than temperature.</h2><p>Extreme heat affects people differently depending on humidity, wind, solar radiation, exposure and vulnerability. A single temperature value cannot communicate the complete human risk.</p></article>
   <article class="panel"><p class="eyebrow">WHY IT MATTERS</p><h2>Act before conditions peak.</h2><p>Clear thermal-stress information can support public awareness, outdoor-work planning, health guidance and earlier local action.</p></article>
@@ -57,4 +85,4 @@
 
 <section class="info-section closing-callout"><p class="eyebrow">GROUND ZERO · SIH 2026</p><h2>Understand the heat before it becomes a threat.</h2><p>Smart India Hackathon 2026 · Problem Statement 26083 · Ministry of Earth Sciences</p><div class="overview-actions"><button id="overview-detect-bottom" class="button primary">Detect my location</button><a class="button quiet" href="/dashboard/">Explore dashboard</a><a class="button quiet" href="/map/">View India risk map</a></div></section>
 {% endblock %}
-{% block scripts %}<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script><script src="/static/js/overview.js"></script>{% endblock %}
+{% block scripts %}<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.4/dist/chart.umd.min.js"></script><script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script><script src="/static/js/dashboard.js"></script><script src="/static/js/overview.js"></script>{% endblock %}

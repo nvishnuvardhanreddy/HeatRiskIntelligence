@@ -27,6 +27,7 @@
     $("location-detail").textContent = [loc.admin_area, loc.country, `${Number(loc.latitude).toFixed(4)}°, ${Number(loc.longitude).toFixed(4)}°`].filter(Boolean).join(" · ");
     $("htsi-score").textContent = t.htsi.score;
     $("htsi-band").textContent = t.htsi.band;
+    if ($("risk-progress")) $("risk-progress").style.width = `${Math.max(0, Math.min(100, t.htsi.score))}%`;
     $("risk-reason").textContent = (data.risk.reason || []).join(" ");
     $("temperature").textContent = GZ.number(w.temperature, "°C");
     $("apparent-temperature").textContent = GZ.number(w.apparent_temperature, "°C");
@@ -37,6 +38,9 @@
     $("heat-index").textContent = GZ.number(t.heat_index, "°C");
     $("wbgt").textContent = GZ.number(t.wbgt, "°C");
     $("utci").textContent = GZ.number(t.utci, "°C");
+    if ($("health-summary")) $("health-summary").textContent = `Health-risk score ${data.health.score} · ${data.health.band}. ${data.health.label}.`;
+    if ($("warning-title")) $("warning-title").textContent = `${data.risk.band} thermal stress`;
+    if ($("warning-text")) $("warning-text").textContent = (data.risk.reason || []).join(" ") || "Follow official heat-safety guidance.";
   }
   function renderForecast(rows) {
     $("forecast-strip").innerHTML = rows.map(row => `<article class="forecast-item"><span>${row.date}</span><strong>${GZ.number(row.temperature_min, "°")} / ${GZ.number(row.temperature_max, "°")}</strong><span>HTSI ${row.htsi.score}</span><span class="band">${row.htsi.band}</span><small class="status forecast">FORECAST · CALCULATED</small></article>`).join("");
