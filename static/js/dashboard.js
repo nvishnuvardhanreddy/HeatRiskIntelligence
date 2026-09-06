@@ -46,8 +46,6 @@
       if ($("priority-population")) $("priority-population").textContent = value;
       if ($("worker-population")) $("worker-population").textContent = data.outdoor_worker_population ? Number(data.outdoor_worker_population).toLocaleString("en-IN") : value;
       if ($("vulnerable-population")) $("vulnerable-population").textContent = data.elderly_children_population ? Number(data.elderly_children_population).toLocaleString("en-IN") : value;
-      if ($("overview-worker-population")) $("overview-worker-population").textContent = data.outdoor_worker_population ? Number(data.outdoor_worker_population).toLocaleString("en-IN") : value;
-      if ($("overview-vulnerable-population")) $("overview-vulnerable-population").textContent = data.elderly_children_population ? Number(data.elderly_children_population).toLocaleString("en-IN") : value;
     }
   }
   function renderCurrent(data) {
@@ -106,10 +104,6 @@
     const priorityLabel = score >= 61 ? "HIGH PRIORITY" : score >= 41 ? "MODERATE PRIORITY" : "LOW PRIORITY";
     if ($("worker-priority")) $("worker-priority").textContent = priorityLabel;
     if ($("vulnerable-priority")) $("vulnerable-priority").textContent = priorityLabel;
-    if ($("overview-worker-risk")) $("overview-worker-risk").textContent = band;
-    if ($("overview-vulnerable-risk")) $("overview-vulnerable-risk").textContent = band;
-    if ($("overview-worker-priority")) $("overview-worker-priority").textContent = priorityLabel;
-    if ($("overview-vulnerable-priority")) $("overview-vulnerable-priority").textContent = priorityLabel;
     if ($("action-plan")) {
       const urgent = score >= 61;
       const actions = [

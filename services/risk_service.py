@@ -9,7 +9,7 @@ def thermal_summary(observation: dict) -> dict:
     t = float(observation["temperature"])
     rh = float(observation["humidity"])
     wind = float(observation.get("wind_speed") or 0)
-    solar = float(observation.get("solar_radiation") or 0)
+    solar = float(observation["solar_radiation"])
     hi = calculate_heat_index(t, rh)
     wb = calculate_wbgt(t, rh, wind, solar)
     uc = calculate_utci(t, rh, wind, solar)

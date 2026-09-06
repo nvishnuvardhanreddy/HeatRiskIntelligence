@@ -2,6 +2,7 @@ from unittest.mock import patch
 
 from django.test import SimpleTestCase, TestCase
 from django.urls import reverse
+from services.solar import estimate_solar_radiation
 
 
 SAMPLE_CURRENT = {
@@ -22,6 +23,13 @@ SAMPLE_CURRENT = {
 
 
 class ApiTests(TestCase):
+    def test_solar_estimate_is_daylight_sensitive_and_deterministic(self):
+        daylight = estimate_solar_radiation("2026-06-21T12:00:00", 17.7, 20)
+        night = estimate_solar_radiation("2026-06-21T00:00:00", 17.7, 20)
+        self.assertGreater(daylight, 100)
+        self.assertEqual(night, 0)
+        self.assertEqual(daylight, estimate_solar_radiation("2026-06-21T12:00:00", 17.7, 20))
+
     def test_health_endpoint(self):
         response = self.client.get("/healthz/")
         self.assertEqual(response.status_code, 200)
