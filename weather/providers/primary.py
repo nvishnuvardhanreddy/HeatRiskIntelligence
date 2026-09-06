@@ -2,6 +2,7 @@ from datetime import datetime
 from typing import Any
 
 import requests
+from time import sleep
 from django.conf import settings
 
 from .base import WeatherProvider, WeatherUnavailable
@@ -13,12 +14,25 @@ class OpenMeteoProvider(WeatherProvider):
     geocode_url = "https://geocoding-api.open-meteo.com/v1/search"
 
     def _get(self, url: str, params: dict[str, Any]) -> dict:
-        try:
-            response = requests.get(url, params=params, timeout=settings.WEATHER_REQUEST_TIMEOUT)
-            response.raise_for_status()
-            return response.json()
-        except (requests.RequestException, ValueError) as exc:
-            raise WeatherUnavailable("The weather provider is temporarily unavailable.") from exc
+        last_error = None
+        for attempt in range(3):
+            try:
+                response = requests.get(
+                    url,
+                    params=params,
+                    timeout=max(10, settings.WEATHER_REQUEST_TIMEOUT),
+                    headers={"Accept": "application/json", "User-Agent": "GroundZero/1.0"},
+                )
+                response.raise_for_status()
+                payload = response.json()
+                if not isinstance(payload, dict):
+                    raise ValueError("Weather provider returned an invalid response.")
+                return payload
+            except (requests.RequestException, ValueError) as exc:
+                last_error = exc
+                if attempt < 2:
+                    sleep(0.5 * (attempt + 1))
+        raise WeatherUnavailable("The weather provider is temporarily unavailable.") from last_error
 
     @staticmethod
     def _coords(latitude, longitude):
