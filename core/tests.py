@@ -5,6 +5,7 @@ from django.urls import reverse
 from services.solar import estimate_solar_radiation
 from weather.providers.base import WeatherUnavailable
 from population.services.population_provider import PopulationUnavailable
+from weather.providers.primary import OpenMeteoProvider
 
 
 SAMPLE_CURRENT = {
@@ -25,6 +26,13 @@ SAMPLE_CURRENT = {
 
 
 class ApiTests(TestCase):
+    def test_weather_provider_uses_small_live_request_for_current_data(self):
+        provider = OpenMeteoProvider()
+        params = provider._params(17.7, 83.2, include_current=True)
+        self.assertIn("current", params)
+        self.assertNotIn("hourly", params)
+        self.assertNotIn("daily", params)
+
     def test_solar_estimate_is_daylight_sensitive_and_deterministic(self):
         daylight = estimate_solar_radiation("2026-06-21T12:00:00", 17.7, 20)
         night = estimate_solar_radiation("2026-06-21T00:00:00", 17.7, 20)

@@ -46,29 +46,34 @@ class OpenMeteoProvider(WeatherProvider):
             raise ValueError("Coordinates are outside valid geographic bounds.")
         return lat, lon
 
-    def _params(self, latitude, longitude):
+    def _params(self, latitude, longitude, *, include_current=False, include_hourly=False, include_daily=False):
         lat, lon = self._coords(latitude, longitude)
-        return {
+        params = {
             "latitude": lat,
             "longitude": lon,
             "timezone": "auto",
-            "forecast_days": 6,
-            "current": ",".join([
+        }
+        if include_current:
+            params["current"] = ",".join([
                 "temperature_2m", "relative_humidity_2m", "apparent_temperature",
                 "wind_speed_10m", "wind_direction_10m", "shortwave_radiation",
                 "surface_pressure", "cloud_cover", "precipitation", "uv_index",
                 "dew_point_2m", "is_day",
-            ]),
-            "hourly": ",".join([
+            ])
+        if include_hourly:
+            params["forecast_days"] = 3
+            params["hourly"] = ",".join([
                 "temperature_2m", "relative_humidity_2m", "apparent_temperature",
                 "wind_speed_10m", "wind_direction_10m", "shortwave_radiation",
                 "surface_pressure", "cloud_cover", "precipitation", "uv_index", "dew_point_2m",
-            ]),
-            "daily": ",".join([
+            ])
+        if include_daily:
+            params["forecast_days"] = 6
+            params["daily"] = ",".join([
                 "temperature_2m_min", "temperature_2m_max", "relative_humidity_2m_mean",
                 "wind_speed_10m_max", "shortwave_radiation_sum", "precipitation_sum",
-            ]),
-        }
+            ])
+        return params
 
     @staticmethod
     def _at(data: dict, key: str, index: int, default: float = 0.0):
@@ -100,7 +105,7 @@ class OpenMeteoProvider(WeatherProvider):
         return rows
 
     def get_current_weather(self, latitude, longitude) -> dict:
-        payload = self._get(self.forecast_url, self._params(latitude, longitude))
+        payload = self._get(self.forecast_url, self._params(latitude, longitude, include_current=True))
         current = payload.get("current") or {}
         wind_kmh = current.get("wind_speed_10m")
         return {
@@ -124,10 +129,10 @@ class OpenMeteoProvider(WeatherProvider):
         }
 
     def get_hourly_weather(self, latitude, longitude) -> list[dict]:
-        return self._hourly_rows(self._get(self.forecast_url, self._params(latitude, longitude)))
+        return self._hourly_rows(self._get(self.forecast_url, self._params(latitude, longitude, include_hourly=True)))
 
     def get_forecast(self, latitude, longitude) -> list[dict]:
-        payload = self._get(self.forecast_url, self._params(latitude, longitude))
+        payload = self._get(self.forecast_url, self._params(latitude, longitude, include_daily=True))
         daily = payload.get("daily") or {}
         times = daily.get("time") or []
         rows = []
