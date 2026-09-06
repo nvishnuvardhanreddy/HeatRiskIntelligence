@@ -126,6 +126,10 @@ class OpenMeteoProvider(WeatherProvider):
             "precipitation": current.get("precipitation"),
             "uv_index": current.get("uv_index"),
             "dew_point": current.get("dew_point_2m"),
+            # is_day=1 means daytime per Open-Meteo; forwarded so the view can
+            # use it as the authoritative signal instead of estimating from the
+            # solar elevation angle.
+            "is_day": current.get("is_day"),
             "source": self.source,
             "timezone": payload.get("timezone"),
         }
