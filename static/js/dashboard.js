@@ -59,6 +59,14 @@
   }
   function renderCurrent(data) {
     const w = data.weather, t = data.thermal, loc = data.location;
+    const demoMode = data.data_mode === "DEMO" || w.data_mode === "DEMO";
+    if (demoMode) {
+      console.warn("[GROUND ZERO] Live weather unavailable; showing deterministic demo weather.", loc);
+      showError("Live weather provider temporarily unavailable – showing demo data.");
+    } else {
+      console.info("[GROUND ZERO] Using live weather data.", loc);
+      clearError();
+    }
     $("location-name").textContent = loc.name || "Selected location";
     if ($("location-state")) $("location-state").textContent = [loc.admin_area, loc.country].filter(Boolean).join(" · ") || "Area identified from coordinates";
     if ($("location-district")) $("location-district").textContent = loc.district || "Regional area";

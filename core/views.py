@@ -1,3 +1,6 @@
+from datetime import datetime, timedelta
+import math
+
 from django.http import JsonResponse
 from django.shortcuts import render
 from django.conf import settings
@@ -45,6 +48,30 @@ def _current_payload(request):
     errors = validate_observation(observation)
     if errors:
         raise ValueError("Weather data failed validation: " + " ".join(errors))
+    return latitude, longitude, observation, thermal_summary(observation)
+
+
+def _demo_observation(latitude, longitude, offset_hours=0):
+    now = datetime.utcnow() + timedelta(hours=offset_hours)
+    phase = (now.hour - 14) / 24 * math.tau
+    latitude_factor = max(-1, min(1, (20 - abs(latitude - 20)) / 20))
+    temperature = 31 + latitude_factor * 4 + math.sin(phase) * 3 + (abs(longitude) % 1)
+    humidity = max(35, min(90, 68 - math.sin(phase) * 12))
+    wind_speed = max(0.8, 2.5 + math.cos(phase) * 1.2)
+    solar = max(0, 780 * math.sin(math.pi * (now.hour - 6) / 12))
+    return {
+        "timestamp": now.isoformat(timespec="minutes"), "temperature": round(temperature, 1),
+        "humidity": round(humidity, 1), "apparent_temperature": round(temperature + 2.5, 1),
+        "wind_speed": round(wind_speed, 2), "wind_speed_unit": "m/s",
+        "wind_direction": round((longitude * 10) % 360, 1), "solar_radiation": round(solar, 1),
+        "pressure": 1008, "cloud_cover": 35, "precipitation": 0, "uv_index": round(max(0, solar / 100), 1),
+        "dew_point": round(temperature - (100 - humidity) / 5, 1),
+        "source": "GROUND ZERO demo weather", "solar_status": "DEMO", "data_mode": "DEMO",
+    }
+
+
+def _demo_current_payload(latitude, longitude):
+    observation = _demo_observation(latitude, longitude)
     return latitude, longitude, observation, thermal_summary(observation)
 
 
@@ -157,13 +184,20 @@ def nearby_risk_api(request):
 @require_GET
 def weather_current(request):
     try:
-        latitude, longitude, observation, thermal = _current_payload(request)
+        try:
+            latitude, longitude, observation, thermal = _current_payload(request)
+            data_mode = "LIVE"
+        except WeatherUnavailable:
+            latitude, longitude = _coordinates(request)
+            latitude, longitude, observation, thermal = _demo_current_payload(latitude, longitude)
+            data_mode = "DEMO"
         location = lookup_location(latitude, longitude)
         return JsonResponse({
             "location": location,
             "weather": observation,
             "thermal": thermal,
-            "labels": {"weather": "LIVE", "thermal": "CALCULATED",
+            "data_mode": data_mode,
+            "labels": {"weather": data_mode, "thermal": "CALCULATED",
                        "solar": observation["solar_status"]},
         })
     except ValueError as exc:
@@ -194,10 +228,27 @@ def weather_hourly(request):
 def weather_forecast(request):
     try:
         latitude, longitude = _coordinates(request)
-        rows = [daily_risk(row) for row in get_forecast(latitude, longitude)]
+        try:
+            rows = [daily_risk(row) for row in get_forecast(latitude, longitude)]
+            data_mode = "LIVE"
+        except WeatherUnavailable:
+            rows = []
+            for day in range(5):
+                observation = _demo_observation(latitude, longitude, day * 24 + 12)
+                rows.append(daily_risk({
+                    "date": (datetime.utcnow() + timedelta(days=day)).date().isoformat(),
+                    "temperature_min": round(observation["temperature"] - 5, 1),
+                    "temperature_max": observation["temperature"],
+                    "humidity": observation["humidity"],
+                    "wind_speed": observation["wind_speed"],
+                    "solar_radiation": observation["solar_radiation"],
+                    "precipitation": 0,
+                    "source": "GROUND ZERO demo weather",
+                }))
+            data_mode = "DEMO"
         return JsonResponse({
             "latitude": latitude, "longitude": longitude, "forecast": rows,
-            "anomalies": forecast_anomalies(rows), "label": "FORECAST",
+            "anomalies": forecast_anomalies(rows), "label": "FORECAST", "data_mode": data_mode,
         })
     except ValueError as exc:
         return _error(str(exc))
@@ -208,7 +259,13 @@ def weather_forecast(request):
 @require_GET
 def risk_current(request):
     try:
-        latitude, longitude, observation, thermal = _current_payload(request)
+        try:
+            latitude, longitude, observation, thermal = _current_payload(request)
+            data_mode = "LIVE"
+        except WeatherUnavailable:
+            latitude, longitude = _coordinates(request)
+            latitude, longitude, observation, thermal = _demo_current_payload(latitude, longitude)
+            data_mode = "DEMO"
         score = thermal["htsi"]["score"]
         health = predict_health_risk({
             "htsi": score, "temperature": float(observation["temperature"]),
@@ -240,6 +297,7 @@ def risk_current(request):
             "risk": {"score": score, "band": thermal["htsi"]["band"],
                      "label": "CALCULATED", "reason": risk_reason(observation, thermal)},
             "population": population,
+            "data_mode": data_mode,
             "health": {"score": health["score"], "band": thermal["htsi"]["band"], "label": health["label"],
                        "exposure": exposure, "vulnerability": vulnerability,
                        "hospital_impact": hospital_impact, "mortality": mortality,

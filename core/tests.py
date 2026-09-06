@@ -75,6 +75,19 @@ class ApiTests(TestCase):
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response.json()["population"]["status"], "NOT REPORTED")
 
+    @patch("core.views.get_current", side_effect=WeatherUnavailable)
+    @patch("core.views.lookup_location", return_value={
+        "name": "Test City", "admin_area": "Test State", "country": "India",
+        "latitude": 17.7, "longitude": 83.2,
+    })
+    def test_current_risk_uses_demo_weather_when_provider_fails(self, location, current):
+        response = self.client.get("/api/risk/current/?lat=17.7&lon=83.2")
+        self.assertEqual(response.status_code, 200)
+        body = response.json()
+        self.assertEqual(body["data_mode"], "DEMO")
+        self.assertGreater(body["weather"]["temperature"], 0)
+        self.assertIn("htsi", body["thermal"])
+
     def test_invalid_coordinates_are_rejected(self):
         response = self.client.get("/api/weather/current/?lat=200&lon=20")
         self.assertEqual(response.status_code, 400)
