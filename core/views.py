@@ -38,19 +38,26 @@ def _current_payload(request):
     observation = get_current(latitude, longitude)
     # Open-Meteo exposes observed shortwave radiation. If it is missing, the
     # response says so rather than presenting a made-up measurement.
+    # Use the provider's is_day flag as the authoritative daytime signal when
+    # available; fall back to the solar-elevation calculation otherwise.
+    provider_is_day = observation.get("is_day")
+    daytime = bool(provider_is_day) if provider_is_day is not None else is_daytime(
+        observation.get("timestamp"), latitude, longitude
+    )
     if observation.get("solar_radiation") is None or (
         float(observation.get("solar_radiation") or 0) <= 0
-        and is_daytime(observation.get("timestamp"))
+        and daytime
     ):
         observation["solar_radiation"] = estimate_solar_radiation(
-            observation.get("timestamp"), latitude, observation.get("cloud_cover", 0)
+            observation.get("timestamp"), latitude,
+            observation.get("cloud_cover", 0), longitude
         )
         observation["solar_status"] = "ESTIMATED"
     else:
         observation["solar_status"] = "LIVE"
     if observation.get("uv_index") is None or (
         float(observation.get("uv_index") or 0) <= 0
-        and is_daytime(observation.get("timestamp"))
+        and daytime
     ):
         observation["uv_index"] = round(min(11.0, float(observation["solar_radiation"]) / 100), 1)
         observation["uv_status"] = "ESTIMATED"

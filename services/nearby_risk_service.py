@@ -2,7 +2,7 @@ from math import asin, cos, radians, sin, sqrt
 
 from services.location_service import reverse_geocode
 from services.risk_service import thermal_summary
-from services.solar import estimate_solar_radiation
+from services.solar import estimate_solar_radiation, is_daytime
 from services.weather_service import get_current, search
 from population.services.population_service import population_for_location
 from population.services.population_provider import PopulationUnavailable
@@ -65,9 +65,16 @@ def nearby_risk(latitude, longitude):
         distance = _distance_km(latitude, longitude, candidate["latitude"], candidate["longitude"])
         try:
             weather = get_current(candidate["latitude"], candidate["longitude"])
-            if weather.get("solar_radiation") is None:
+            provider_is_day = weather.get("is_day")
+            daytime = bool(provider_is_day) if provider_is_day is not None else is_daytime(
+                weather.get("timestamp"), candidate["latitude"], candidate["longitude"]
+            )
+            if weather.get("solar_radiation") is None or (
+                float(weather.get("solar_radiation") or 0) <= 0 and daytime
+            ):
                 weather["solar_radiation"] = estimate_solar_radiation(
-                    weather.get("timestamp"), candidate["latitude"], weather.get("cloud_cover", 0)
+                    weather.get("timestamp"), candidate["latitude"],
+                    weather.get("cloud_cover", 0), candidate["longitude"]
                 )
             thermal = thermal_summary(weather)
             population = population_for_location(candidate["latitude"], candidate["longitude"])
