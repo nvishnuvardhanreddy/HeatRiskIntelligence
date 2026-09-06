@@ -8,7 +8,7 @@ from django.views.decorators.http import require_GET, require_http_methods
 
 from services.location_service import reverse_geocode as lookup_location
 from services.risk_service import daily_risk, thermal_summary
-from services.solar import estimate_solar_radiation
+from services.solar import estimate_solar_radiation, is_daytime
 from ml_models.prediction import predict_health_risk
 from services.weather_service import get_current, get_forecast, get_hourly, search
 from weather.providers.base import WeatherUnavailable
@@ -38,13 +38,24 @@ def _current_payload(request):
     observation = get_current(latitude, longitude)
     # Open-Meteo exposes observed shortwave radiation. If it is missing, the
     # response says so rather than presenting a made-up measurement.
-    if observation.get("solar_radiation") is None:
+    if observation.get("solar_radiation") is None or (
+        float(observation.get("solar_radiation") or 0) <= 0
+        and is_daytime(observation.get("timestamp"))
+    ):
         observation["solar_radiation"] = estimate_solar_radiation(
             observation.get("timestamp"), latitude, observation.get("cloud_cover", 0)
         )
         observation["solar_status"] = "ESTIMATED"
     else:
         observation["solar_status"] = "LIVE"
+    if observation.get("uv_index") is None or (
+        float(observation.get("uv_index") or 0) <= 0
+        and is_daytime(observation.get("timestamp"))
+    ):
+        observation["uv_index"] = round(min(11.0, float(observation["solar_radiation"]) / 100), 1)
+        observation["uv_status"] = "ESTIMATED"
+    else:
+        observation["uv_status"] = "LIVE"
     errors = validate_observation(observation)
     if errors:
         raise ValueError("Weather data failed validation: " + " ".join(errors))

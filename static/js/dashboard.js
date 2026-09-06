@@ -87,6 +87,24 @@
       if ($("vulnerable-population")) $("vulnerable-population").textContent = data.elderly_children_population ? Number(data.elderly_children_population).toLocaleString("en-IN") : value;
     }
   }
+  function initDashboardMap() {
+    const element = $("dashboard-map");
+    if (!window.L || !element) return;
+    const location = GZ.getLocation();
+    const map = L.map(element, { scrollWheelZoom: false }).setView(
+      location ? [location.latitude, location.longitude] : [22.5, 79], location ? 9 : 4.5
+    );
+    L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
+      attribution: "&copy; OpenStreetMap contributors", maxZoom: 18
+    }).addTo(map);
+    if (location) L.marker([location.latitude, location.longitude]).addTo(map).bindPopup(location.name || "Selected location").openPopup();
+    window.addEventListener("gz-location", event => {
+      const next = event.detail;
+      map.setView([next.latitude, next.longitude], 9);
+      L.marker([next.latitude, next.longitude]).addTo(map).bindPopup(next.name || "Selected location").openPopup();
+    });
+    setTimeout(() => map.invalidateSize(), 100);
+  }
   function renderCurrent(data) {
     const w = data.weather, t = data.thermal, loc = data.location;
     const demoMode = data.data_mode === "DEMO" || w.data_mode === "DEMO";
@@ -117,6 +135,7 @@
     if ($("pressure")) $("pressure").textContent = GZ.number(w.pressure, " hPa");
     if ($("cloud-cover")) $("cloud-cover").textContent = GZ.number(w.cloud_cover, "%");
     if ($("uv-index")) $("uv-index").textContent = GZ.number(w.uv_index, "");
+    if ($("uv-label")) $("uv-label").textContent = w.uv_status || "LIVE";
     $("heat-index").textContent = GZ.number(t.heat_index, "°C");
     $("wbgt").textContent = GZ.number(t.wbgt, "°C");
     $("utci").textContent = GZ.number(t.utci, "°C");
@@ -201,6 +220,7 @@
       { enableHighAccuracy: false, timeout: 10000 }
     );
   });
+  initDashboardMap();
   $("coordinate-button")?.addEventListener("click", () => {
     const lat = parseFloat($("latitude").value), lon = parseFloat($("longitude").value);
     if (Number.isFinite(lat) && Number.isFinite(lon)) select(GZ.locationFromCoords(lat, lon)); else showError("Enter a valid latitude and longitude.");

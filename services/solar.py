@@ -29,3 +29,12 @@ def estimate_solar_radiation(timestamp, latitude, cloud_cover=0):
         return round(max(0.0, clear_sky * transmission), 1)
     except (TypeError, ValueError, OverflowError):
         raise ValueError("A valid weather timestamp and latitude are required for solar estimation.")
+
+
+def is_daytime(timestamp):
+    """Return whether a provider timestamp falls in the daylight estimate window."""
+    try:
+        when = datetime.fromisoformat(str(timestamp).replace("Z", "+00:00"))
+        return 6 <= when.hour <= 18
+    except (TypeError, ValueError, OverflowError):
+        raise ValueError("A valid weather timestamp is required for daylight detection.")
