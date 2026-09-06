@@ -39,12 +39,25 @@
     $("wbgt").textContent = GZ.number(t.wbgt, "°C");
     $("utci").textContent = GZ.number(t.utci, "°C");
     if ($("health-summary")) $("health-summary").textContent = `Health-risk score ${data.health.score} · ${data.health.band}. ${data.health.label}.`;
+    if ($("health-score")) $("health-score").textContent = `${Number(data.health.score).toFixed(1)} / 100`;
+    if ($("health-priority")) $("health-priority").textContent = data.health.band;
     if ($("warning-title")) $("warning-title").textContent = `${data.risk.band} thermal stress`;
     if ($("warning-text")) $("warning-text").textContent = (data.risk.reason || []).join(" ") || "Follow official heat-safety guidance.";
+    if ($("alert-area")) $("alert-area").textContent = loc.name || "Selected area";
+    if ($("alert-status")) $("alert-status").textContent = `${data.risk.band === "LOW" || data.risk.band === "MODERATE" ? "MONITOR" : "ACTIVE HEAT ALERT"} · CALCULATED`;
+    if ($("alert-reason")) $("alert-reason").textContent = (data.risk.reason || []).join(" ") || "No elevated risk drivers identified.";
+    if ($("warning-actions")) {
+      const actions = data.risk.band === "LOW" ? ["Maintain hydration.", "Use normal heat precautions."] : ["Stay hydrated.", "Reduce prolonged outdoor exposure.", "Take regular breaks.", "Monitor vulnerable people.", "Follow official heat-health advisories."];
+      $("warning-actions").innerHTML = actions.map(action => `<li>${action}</li>`).join("");
+    }
   }
   function renderForecast(rows) {
     $("forecast-strip").innerHTML = rows.map(row => `<article class="forecast-item"><span>${row.date}</span><strong>${GZ.number(row.temperature_min, "°")} / ${GZ.number(row.temperature_max, "°")}</strong><span>HTSI ${row.htsi.score}</span><span class="band">${row.htsi.band}</span><small class="status forecast">FORECAST · CALCULATED</small></article>`).join("");
     const labels = rows.map(r => r.date), values = rows.map(r => r.htsi.score);
+    if ($("risk-trend") && values.length > 1) {
+      const delta = values[values.length - 1] - values[0];
+      $("risk-trend").textContent = `RISK TREND · ${delta > 3 ? "INCREASING" : delta < -3 ? "IMPROVING" : "STABLE"}`;
+    }
     if (window.Chart && $("risk-chart")) {
       chart?.destroy();
       chart = new Chart($("risk-chart"), { type: "line", data: { labels, datasets: [{ label: "HTSI", data: values, borderColor: "#087f8c", backgroundColor: "rgba(8,127,140,.1)", fill: true, tension: .25 }] }, options: { plugins: { legend: { display: false } }, scales: { y: { min: 0, max: 100 } } } });

@@ -12,7 +12,7 @@
       L.marker([location.latitude, location.longitude]).addTo(map).bindPopup("Selected location");
     }
   }
-  ["overview-detect", "overview-detect-bottom"].forEach((id) => {
+  ["overview-detect", "overview-detect-bottom", "overview-detect-inline"].forEach((id) => {
     document.getElementById(id)?.addEventListener("click", () => {
       if (!navigator.geolocation) {
         document.getElementById("overview-status").textContent = "GPS is unavailable. Use the dashboard search instead.";
