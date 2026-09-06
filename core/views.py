@@ -203,13 +203,22 @@ def risk_current(request):
             "solar_radiation": float(observation["solar_radiation"]),
             "night_temperature": float(observation["temperature"]), "vulnerability": 0,
         })
+        health_score = float(health["score"])
+        exposure = round(min(100, score * 0.75 + float(observation["humidity"]) * 0.15 + max(0, 10 - float(observation["wind_speed"]))), 1)
+        vulnerability = round(min(100, score * 0.6 + health_score * 0.4), 1)
+        hospital_impact = round(min(100, score * 0.55 + exposure * 0.25 + vulnerability * 0.2), 1)
+        mortality = round(min(100, score * 0.5 + health_score * 0.3 + vulnerability * 0.2), 1)
+        priority = round(min(100, score * 0.4 + exposure * 0.2 + vulnerability * 0.2 + health_score * 0.2), 1)
         return JsonResponse({
             "location": lookup_location(latitude, longitude),
             "weather": observation,
             "thermal": thermal,
             "risk": {"score": score, "band": thermal["htsi"]["band"],
                      "label": "CALCULATED", "reason": risk_reason(observation, thermal)},
-            "health": {"score": health["score"], "band": thermal["htsi"]["band"], "label": health["label"]},
+            "health": {"score": health["score"], "band": thermal["htsi"]["band"], "label": health["label"],
+                       "exposure": exposure, "vulnerability": vulnerability,
+                       "hospital_impact": hospital_impact, "mortality": mortality,
+                       "priority": priority},
         })
     except ValueError as exc:
         return _error(str(exc))

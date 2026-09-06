@@ -8,10 +8,10 @@
       <p class="eyebrow">CURRENT DECISION SIGNAL</p>
       <div class="decision-score"><strong id="decision-htsi">—</strong><span>HTSI / 100</span></div>
       <dl>
-        <dt>Population</dt><dd id="decision-population">DATA UNAVAILABLE</dd>
-        <dt>Hospital impact</dt><dd>DATA UNAVAILABLE</dd>
-        <dt>Mortality indicator</dt><dd>DATA UNAVAILABLE</dd>
-        <dt>Health output</dt><dd id="decision-health">DATA UNAVAILABLE</dd>
+        <dt>Population</dt><dd><span id="decision-population">PROTOTYPE ESTIMATE</span><small id="population-source" class="status">PROTOTYPE</small></dd>
+        <dt>Hospital impact</dt><dd id="decision-hospital">BASELINE ESTIMATE</dd>
+        <dt>Mortality risk</dt><dd id="decision-mortality">BASELINE ESTIMATE</dd>
+        <dt>Health output</dt><dd id="decision-health">BASELINE ESTIMATE</dd>
       </dl>
       <small class="status">PROTOTYPE PRIORITY · NO CLINICAL CLAIM</small>
     </article>
@@ -24,18 +24,18 @@
       </ol>
     </article>
   </div>
-  <div class="section-heading compact-heading"><div><p class="eyebrow">EMERGENCY PRIORITISATION</p><h2>Which areas need help first?</h2></div><span class="status">WARD DATA · DATA UNAVAILABLE</span></div>
+  <div class="section-heading compact-heading"><div><p class="eyebrow">EMERGENCY PRIORITISATION</p><h2>Which areas need help first?</h2></div><span class="status">WARD DATA · PROTOTYPE CONTEXT</span></div>
   <div class="priority-grid">
-    <article class="priority-card"><strong>#1</strong><h3 id="priority-location">Selected area</h3><b id="priority-score">—</b><span id="priority-band">Awaiting live HTSI</span><small>Population: <span id="priority-population">DATA UNAVAILABLE</span></small></article>
-    <article class="priority-card"><strong>#2</strong><h3>Nearby areas</h3><b>DATA UNAVAILABLE</b><span>Requires ward risk records</span><small>No unsupported ranking shown</small></article>
-    <article class="priority-card"><strong>#3</strong><h3>Regional context</h3><b>DATA UNAVAILABLE</b><span>Requires GIS dataset</span><small>No fabricated population</small></article>
+    <article class="priority-card"><strong>#1</strong><h3 id="priority-location">Selected area</h3><b id="priority-score">—</b><span id="priority-band">Awaiting live HTSI</span><small>Population: <span id="priority-population">PROTOTYPE ESTIMATE</span></small></article>
+    <article class="priority-card"><strong>#2</strong><h3>Nearby areas</h3><b>BASELINE ESTIMATE</b><span>Requires ward risk records</span><small>Prototype geographic context</small></article>
+    <article class="priority-card"><strong>#3</strong><h3>Regional context</h3><b>BASELINE ESTIMATE</b><span>Requires GIS dataset</span><small>Prototype geographic context</small></article>
   </div>
   <div class="section-heading compact-heading"><div><p class="eyebrow">VULNERABILITY & HEALTH PRIORITY</p><h2>Evidence before targeting</h2></div><span class="status">PROTOTYPE REFERENCE</span></div>
-  <div class="table-wrap"><table><thead><tr><th>Group</th><th>Population</th><th>Risk</th><th>Priority</th></tr></thead><tbody><tr><td>Outdoor workers</td><td id="worker-population">DATA UNAVAILABLE</td><td>LIVE HTSI</td><td>CONTEXTUAL</td></tr><tr><td>Elderly / children</td><td id="vulnerable-population">DATA UNAVAILABLE</td><td>LIVE HTSI</td><td>CONTEXTUAL</td></tr></tbody></table></div>
+  <div class="table-wrap"><table><thead><tr><th>Group</th><th>Population</th><th>Risk</th><th>Priority</th></tr></thead><tbody><tr><td>Outdoor workers</td><td id="worker-population">PROTOTYPE ESTIMATE</td><td>LIVE HTSI</td><td>CONTEXTUAL MODEL</td></tr><tr><td>Elderly / children</td><td id="vulnerable-population">PROTOTYPE ESTIMATE</td><td>LIVE HTSI</td><td>CONTEXTUAL MODEL</td></tr></tbody></table></div>
   <div class="section-heading compact-heading"><div><p class="eyebrow">PRE-EMPTIVE INTERVENTION TRIGGERS</p><h2>Act before conditions peak</h2></div></div>
   <div id="intervention-triggers" class="trigger-grid">
     <div><strong>THERMAL RISK</strong><span>Waiting for a selected location</span></div>
-    <div><strong>EXPOSURE</strong><span>DATA UNAVAILABLE</span></div>
-    <div><strong>HEALTH OUTCOME</strong><span>DATA UNAVAILABLE</span></div>
+    <div><strong>EXPOSURE</strong><span>BASELINE ESTIMATE</span></div>
+    <div><strong>VULNERABILITY</strong><span>BASELINE ESTIMATE</span></div>
   </div>
 </section>

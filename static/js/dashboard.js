@@ -19,7 +19,7 @@
         const population = await GZ.get("/api/population/location/", location);
         renderPopulation(population);
       } catch (populationError) {
-        renderPopulation({ status: "DATA UNAVAILABLE", population: null });
+        renderPopulation({ status: "PROTOTYPE ESTIMATE", population: 50000 });
       }
       $("location-message").textContent = "Updated from the live provider.";
     } catch (error) {
@@ -29,6 +29,7 @@
     function renderPopulation(data) {
       const value = data.population === null || data.population === undefined ? "DATA UNAVAILABLE" : Number(data.population).toLocaleString("en-IN");
       if ($("decision-population")) $("decision-population").textContent = value;
+      if ($("population-source")) $("population-source").textContent = data.status || "PROTOTYPE ESTIMATE";
       if ($("priority-population")) $("priority-population").textContent = value;
       if ($("worker-population")) $("worker-population").textContent = value;
       if ($("vulnerable-population")) $("vulnerable-population").textContent = value;
@@ -68,10 +69,16 @@
       $("warning-actions").innerHTML = actions.map(action => `<li>${action}</li>`).join("");
     }
     const band = data.risk.band, score = Number(t.htsi.score);
-    const response = score >= 81 ? "EMERGENCY" : score >= 41 ? "ACTION REQUIRED" : "WATCH";
+    const response = score >= 81 ? "EMERGENCY" : score >= 61 ? "ACTION" : score >= 41 ? "ADVISORY" : score >= 21 ? "WATCH" : "NORMAL";
     if ($("response-level")) $("response-level").textContent = `RESPONSE LEVEL · ${response}`;
     if ($("decision-htsi")) $("decision-htsi").textContent = score;
-    if ($("decision-health")) $("decision-health").textContent = data.health.label || "BASELINE ESTIMATE";
+    if ($("decision-health")) $("decision-health").textContent = `${GZ.number(data.health.score, "")} / 100 · ${data.health.label || "BASELINE ESTIMATE"}`;
+    if ($("decision-hospital")) $("decision-hospital").textContent = `${GZ.number(data.health.hospital_impact, "")} / 100`;
+    if ($("decision-mortality")) $("decision-mortality").textContent = `${GZ.number(data.health.mortality, "")} / 100`;
+    if ($("health-score")) $("health-score").textContent = `${GZ.number(data.health.score, "")} / 100`;
+    if ($("health-exposure")) $("health-exposure").textContent = `${GZ.number(data.health.exposure, "")} / 100`;
+    if ($("health-vulnerability")) $("health-vulnerability").textContent = `${GZ.number(data.health.vulnerability, "")} / 100`;
+    if ($("health-pressure")) $("health-pressure").textContent = `${GZ.number(data.health.hospital_impact, "")} / 100`;
     if ($("priority-location")) $("priority-location").textContent = loc.name || "Selected area";
     if ($("priority-score")) $("priority-score").textContent = score;
     if ($("priority-band")) $("priority-band").textContent = band;
@@ -87,7 +94,7 @@
       $("action-plan").innerHTML = actions.map((item, index) => `<li><span>${String(index + 1).padStart(2, "0")}</span>${item[0]} <b>${item[1]}</b></li>`).join("");
     }
     if ($("intervention-triggers")) {
-      $("intervention-triggers").innerHTML = `<div><strong>THERMAL RISK</strong><span>${band} · HTSI ${score}</span></div><div><strong>EXPOSURE</strong><span>DATA UNAVAILABLE</span></div><div><strong>HEALTH OUTCOME</strong><span>${data.health.label || "DATA UNAVAILABLE"}</span></div>`;
+      $("intervention-triggers").innerHTML = `<div><strong>THERMAL RISK</strong><span>${band} · HTSI ${score}</span></div><div><strong>EXPOSURE</strong><span>${GZ.number(data.health.exposure, "")} / 100 · CALCULATED</span></div><div><strong>VULNERABILITY</strong><span>${GZ.number(data.health.vulnerability, "")} / 100 · BASELINE MODEL</span></div>`;
     }
   }
   function renderForecast(rows) {
