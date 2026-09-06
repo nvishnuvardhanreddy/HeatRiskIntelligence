@@ -1,0 +1,9 @@
+{% extends "base.html" %}
+{% block content %}
+<section class="page-header"><p class="eyebrow">CALCULATED FROM LIVE WEATHER</p><h1>Thermal analysis</h1><p>Heat Index, WBGT and UTCI describe different aspects of how atmospheric conditions affect people.</p></section>
+<div class="notice info">Use the dashboard location controls first, then return here. The same coordinates are retained in this browser session.</div>
+<section class="analysis-grid"><article class="panel"><h2>Atmospheric conditions</h2><dl id="atmospheric-list"><dt>Temperature</dt><dd>—</dd><dt>Humidity</dt><dd>—</dd><dt>Wind</dt><dd>—</dd><dt>Solar radiation</dt><dd>—</dd><dt>Pressure</dt><dd>—</dd><dt>Cloud cover</dt><dd>—</dd></dl></article><article class="panel"><h2>Thermal metrics</h2><div class="big-metric"><span>Heat Index</span><strong id="analysis-hi">—</strong><small>CALCULATED · apparent heat from temperature and humidity</small></div><div class="big-metric"><span>WBGT</span><strong id="analysis-wbgt">—</strong><small>CALCULATED · outdoor work-heat screening</small></div><div class="big-metric"><span>UTCI</span><strong id="analysis-utci">—</strong><small>CALCULATED · thermal comfort approximation</small></div></article></section>
+<article class="panel"><h2>Why is the risk high?</h2><ul id="analysis-reasons"><li>Select a location to see transparent contributing factors.</li></ul></article>
+{% endblock %}
+{% block scripts %}<script src="/static/js/analysis.js"></script>{% endblock %}
+

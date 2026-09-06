@@ -1,0 +1,8 @@
+{% extends "base.html" %}
+{% block content %}
+<section class="page-header"><p class="eyebrow">REAL EXTERNAL FORECAST · CALCULATED RISK</p><h1>Five-day outlook</h1><p>Forecast weather is supplied by Open-Meteo. Thermal metrics are recalculated for each day without artificial risk adjustments.</p></section>
+<div id="forecast-alert" class="notice" hidden></div><div id="forecast-table" class="forecast-cards"><div class="empty-state">Select a location on the dashboard to load forecast data.</div></div>
+<article class="panel chart-panel"><div class="section-heading"><h2>Temperature and HTSI</h2><span class="status forecast">FORECAST</span></div><canvas id="forecast-chart" height="180"></canvas></article>
+{% endblock %}
+{% block scripts %}<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.4/dist/chart.umd.min.js"></script><script src="/static/js/forecast.js"></script>{% endblock %}
+

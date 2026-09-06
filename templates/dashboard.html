@@ -1,0 +1,47 @@
+{% extends "base.html" %}
+{% load static %}
+{% block content %}
+<section class="hero">
+  <div>
+    <p class="eyebrow">EXTREME HEATWAVE EARLY WARNING</p>
+    <h1>Know the heat.<br><span>Understand the risk.</span></h1>
+    <p class="lede">A transparent view of current thermal stress, forecast conditions and practical action.</p>
+  </div>
+  <div class="hero-actions">
+    <button id="detect-location" class="button primary">◎ Detect my location</button>
+    <p id="location-message" class="muted" role="status">Choose a location to begin.</p>
+  </div>
+</section>
+
+<section class="search-panel" aria-label="Location search">
+  <label for="location-search">Search a city, district, pincode or coordinates</label>
+  <div class="search-row"><input id="location-search" type="search" autocomplete="off" placeholder="e.g. Visakhapatnam or 17.6868, 83.2185"><button id="search-button" class="button">Search</button></div>
+  <div id="search-results" class="search-results" role="listbox"></div>
+  <div class="coordinate-row"><input id="latitude" inputmode="decimal" placeholder="Latitude"><input id="longitude" inputmode="decimal" placeholder="Longitude"><button id="coordinate-button" class="button quiet">Analyze coordinates</button></div>
+</section>
+
+<div id="data-error" class="notice error" hidden role="alert"></div>
+<section id="current-panel" class="dashboard-grid" aria-live="polite">
+  <div class="location-heading"><p class="eyebrow">SELECTED LOCATION</p><h2 id="location-name">—</h2><p id="location-detail" class="muted">Live weather appears here after selection.</p></div>
+  <article class="risk-card" id="risk-card"><div class="card-top"><span>Current human thermal stress</span><span class="status calculated">CALCULATED</span></div><div class="score-line"><strong id="htsi-score">—</strong><span id="htsi-band">Awaiting data</span></div><p id="risk-reason" class="muted">HTSI combines temperature, humidity, wind and solar radiation.</p></article>
+  <div class="metric-grid">
+    <article class="metric"><span>Temperature</span><strong id="temperature">—</strong><small class="status live">LIVE</small></article>
+    <article class="metric"><span>Feels like</span><strong id="apparent-temperature">—</strong><small class="status live">LIVE</small></article>
+    <article class="metric"><span>Humidity</span><strong id="humidity">—</strong><small class="status live">LIVE</small></article>
+    <article class="metric"><span>Wind</span><strong id="wind">—</strong><small class="status live">LIVE</small></article>
+    <article class="metric"><span>Solar radiation</span><strong id="solar">—</strong><small id="solar-label" class="status estimated">ESTIMATED IF NEEDED</small></article>
+    <article class="metric"><span>Heat Index</span><strong id="heat-index">—</strong><small class="status calculated">CALCULATED</small></article>
+    <article class="metric"><span>WBGT</span><strong id="wbgt">—</strong><small class="status calculated">CALCULATED</small></article>
+    <article class="metric"><span>UTCI</span><strong id="utci">—</strong><small class="status calculated">CALCULATED</small></article>
+  </div>
+</section>
+
+<section class="section-heading"><div><p class="eyebrow">OUTLOOK</p><h2>Five-day heat risk</h2></div><a class="text-link" href="/forecast/">Open full forecast →</a></section>
+<section id="forecast-strip" class="forecast-strip"><div class="empty-state">Forecast data will load with a selected location.</div></section>
+<section class="lower-grid"><article class="panel"><div class="section-heading"><div><p class="eyebrow">TREND</p><h2>Thermal stress trend</h2></div><span class="status forecast">FORECAST</span></div><canvas id="risk-chart" height="150" aria-label="Thermal stress chart"></canvas></article><article class="panel action-panel"><p class="eyebrow">WHAT SHOULD YOU DO?</p><h2>Protect people first.</h2><ul><li>Plan strenuous outdoor work for the coolest forecast period.</li><li>Drink water regularly and take shade breaks before you feel unwell.</li><li>Check on older adults, children and people without reliable cooling.</li></ul><a href="/health-risk/" class="button quiet">Read health guidance</a></article></section>
+{% endblock %}
+{% block scripts %}
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.4/dist/chart.umd.min.js"></script>
+<script src="{% static 'js/dashboard.js' %}"></script>
+{% endblock %}
+

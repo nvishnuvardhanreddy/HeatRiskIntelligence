@@ -1,0 +1,4 @@
+{% extends "base.html" %}
+{% block content %}<section class="page-header"><p class="eyebrow">HOURLY HEAT STRESS</p><h1>Find the peak period</h1><p>Peak stress is calculated from the hourly forecast, not hard-coded to a clock time.</p></section><article class="panel"><div id="peak-period" class="peak-callout">Select a location on the dashboard.</div><div class="table-wrap"><table><thead><tr><th>Time</th><th>Temperature</th><th>Humidity</th><th>WBGT</th><th>HTSI</th><th>Status</th></tr></thead><tbody id="hourly-table"></tbody></table></div></article>{% endblock %}
+{% block scripts %}<script src="/static/js/hourly.js"></script>{% endblock %}
+

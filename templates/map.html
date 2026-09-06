@@ -1,0 +1,5 @@
+{% extends "base.html" %}
+{% block head %}<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">{% endblock %}
+{% block content %}<section class="page-header"><p class="eyebrow">INDIA-WIDE COVERAGE</p><h1>Live risk map</h1><p>Map marker reflects the selected location. Administrative boundaries are not invented when accurate data is unavailable.</p></section><div id="map" class="map" aria-label="Interactive map"></div><div class="legend"><span class="low">LOW</span><span class="moderate">MODERATE</span><span class="high">HIGH</span><span class="very-high">VERY HIGH</span><span class="extreme">EXTREME</span></div>{% endblock %}
+{% block scripts %}<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script><script src="/static/js/map.js"></script>{% endblock %}
+
