@@ -1,14 +1,60 @@
 {% extends "base.html" %}
+{% block head %}<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">{% endblock %}
 {% block content %}
 <section class="overview-hero">
-  <p class="eyebrow">GROUND ZERO · HEAT RISK INTELLIGENCE</p>
-  <h1>See heat clearly.<br><span>Act before it peaks.</span></h1>
-  <p class="lede">A transparent dashboard using live Open-Meteo weather and explainable thermal-stress calculations. No synthetic weather is shown.</p>
-  <div class="overview-actions"><a class="button primary" href="/dashboard/">Open dashboard</a><a class="button quiet" href="/what-if/">Run a what-if</a></div>
+  <p class="eyebrow">SMART INDIA HACKATHON 2026 · PROBLEM STATEMENT 26083</p>
+  <h1>Know the heat.<br><span>Understand the risk. Act early.</span></h1>
+  <p class="lede">GROUND ZERO is a Human Thermal Stress Early Warning and GIS Intelligence platform for turning weather conditions into clear, explainable public-safety action.</p>
+  <div class="overview-actions"><button id="overview-detect" class="button primary">Detect my location</button><a class="button quiet" href="/dashboard/">Explore live risk</a><a class="button quiet" href="/dashboard/#location-search">Search location</a></div>
+  <p id="overview-status" class="muted" role="status">Live weather is fetched through the Django backend. No synthetic weather is displayed.</p>
 </section>
-<section class="overview-grid">
-  <article class="panel"><p class="eyebrow">LIVE WEATHER</p><h2>Current conditions</h2><p>Choose a location to see temperature, humidity, wind and observed or explicitly estimated solar radiation.</p><a class="text-link" href="/dashboard/">Choose a location →</a></article>
-  <article class="panel"><p class="eyebrow">FIVE DAYS</p><h2>Forecast-derived risk</h2><p>Daily minimum and maximum temperatures, humidity, wind, solar, Heat Index, WBGT, UTCI and HTSI are calculated from the provider forecast.</p><a class="text-link" href="/forecast/">View forecast →</a></article>
-  <article class="panel"><p class="eyebrow">SCENARIOS</p><h2>Plan for change</h2><p>Explore how heat, humidity, wind and sunlight change the calculated index. Scenario results are clearly labelled simulated.</p><a class="text-link" href="/what-if/">Open simulation →</a></article>
+<section class="info-section overview-grid">
+  <article class="panel"><p class="eyebrow">THE PROBLEM</p><h2>Heat is more than temperature.</h2><p>Extreme heat affects people differently depending on humidity, wind, solar radiation, exposure and vulnerability. A single temperature value cannot communicate the complete human risk.</p></article>
+  <article class="panel"><p class="eyebrow">WHY IT MATTERS</p><h2>Act before conditions peak.</h2><p>Clear thermal-stress information can support public awareness, outdoor-work planning, health guidance and earlier local action.</p></article>
+  <article class="panel"><p class="eyebrow">WHO BENEFITS</p><h2>People and decision-makers.</h2><p>Public users, youth and students, outdoor workers, vulnerable populations, researchers, government and disaster-management teams.</p></article>
 </section>
+
+<section class="info-section">
+  <div class="section-heading"><div><p class="eyebrow">OUR SOLUTION</p><h2>From weather to action</h2></div><span class="status calculated">EXPLAINABLE PIPELINE</span></div>
+  <div class="method-flow"><span>REAL WEATHER<br><small>Open-Meteo</small></span><b>↓</b><span>VALIDATION</span><b>↓</b><span>THERMAL METRICS</span><b>↓</b><span>HTSI</span><b>↓</b><span>ML RISK</span><b>↓</b><span>FORECAST</span><b>↓</b><span>GIS</span><b>↓</b><span>ALERTS & ACTION</span></div>
+</section>
+
+<section class="info-section two-column">
+  <article class="panel"><p class="eyebrow">HOW IT WORKS</p><h2>Human thermal stress intelligence</h2><p>GROUND ZERO validates temperature, humidity, wind, solar radiation and related provider values before calculating thermal stress. Each output is labelled so real observations, forecast values, calculated metrics, estimates and model outputs are never mixed.</p><ul class="clean-list"><li>Location detection, search and coordinate analysis</li><li>Current weather and five-day forecast</li><li>Thermal analysis with transparent inputs</li><li>Health-risk estimate clearly separated from calculated thermal risk</li><li>India-wide map workflow from state to district, city and ward where data exists</li></ul></article>
+  <article class="panel"><p class="eyebrow">THERMAL INDICES</p><div class="index-list"><div><strong>Heat Index</strong><span>How hot air feels using temperature and humidity.</span></div><div><strong>WBGT</strong><span>Outdoor heat stress using temperature, humidity, wind and solar radiation.</span></div><div><strong>UTCI</strong><span>Thermal stress screening using atmospheric and radiant conditions.</span></div><div><strong>HTSI</strong><span>A normalized 0–100 Human Thermal Stress Index combining relevant stress signals.</span></div></div></article>
+</section>
+
+<section class="info-section htsi-section">
+  <div><p class="eyebrow">HTSI · HUMAN THERMAL STRESS INDEX</p><h2>A common language for risk</h2><p>HTSI combines calculated thermal metrics and environmental stress components, then normalizes the result from 0 to 100 for clear interpretation.</p></div>
+  <div class="risk-scale"><span><b>0–20</b> LOW</span><span><b>21–40</b> MODERATE</span><span><b>41–60</b> HIGH</span><span><b>61–80</b> VERY HIGH</span><span><b>81–100</b> EXTREME</span></div>
+</section>
+
+<section class="info-section two-column">
+  <article class="panel"><p class="eyebrow">REAL-TIME MONITORING</p><h2>See the conditions around you</h2><p>Monitor temperature, humidity, wind, solar radiation, thermal stress and risk for a selected location.</p><div class="overview-actions"><a class="button primary" href="/dashboard/">Open dashboard</a><a class="button quiet" href="/gps/">Use GPS location</a></div></article>
+  <article class="panel"><p class="eyebrow">FORECASTING</p><h2>Five days, calculated honestly</h2><p>Each forecast day carries minimum and maximum temperature, humidity, wind, solar radiation, Heat Index, WBGT, UTCI, HTSI and risk level. Future risk is calculated from the actual provider forecast without artificial increases.</p><a class="text-link" href="/forecast/">View five-day forecast →</a></article>
+</section>
+
+<section class="info-section map-section">
+  <div class="section-heading"><div><p class="eyebrow">GIS INTELLIGENCE</p><h2>India-wide risk context</h2></div><a class="text-link" href="/map/">Open live GIS map →</a></div>
+  <p class="muted">The geographic workflow is India → State → District → City → Ward/Zone where accurate data exists. Boundaries are not invented when data is unavailable.</p>
+  <div id="overview-map" class="map overview-map" aria-label="India map preview"></div>
+</section>
+
+<section class="info-section feature-grid">
+  <article class="panel"><p class="eyebrow">KEY FEATURES</p><h2>Built for public safety</h2><div class="tag-list"><span>Real-time weather</span><span>Heat Index</span><span>WBGT</span><span>UTCI</span><span>HTSI</span><span>ML estimate</span><span>5-day forecast</span><span>GIS mapping</span><span>Health risk</span><span>Heat alerts</span><span>What-if simulation</span><span>Location search</span></div></article>
+  <article class="panel"><p class="eyebrow">DATA TRANSPARENCY</p><h2>Know what each value means</h2><dl><dt>REAL DATA</dt><dd>External weather and geocoding responses</dd><dt>FORECAST</dt><dd>Provider forecast values</dd><dt>CALCULATED</dt><dd>Thermal engine outputs</dd><dt>ML ESTIMATE</dt><dd>Configured model or transparent baseline</dd><dt>ESTIMATED</dt><dd>Documented fallback variables</dd><dt>DEMO</dt><dd>No demo weather is used</dd></dl></article>
+</section>
+
+<section class="info-section two-column">
+  <article class="panel"><p class="eyebrow">SYSTEM ARCHITECTURE</p><h2>Connected from browser to action</h2><div class="architecture-flow"><span>USER</span><b>↓</b><span>DJANGO</span><b>↓</b><span>WEATHER API</span><b>↓</b><span>THERMAL ENGINE</span><b>↓</b><span>ML / GIS / FORECAST</span><b>↓</b><span>PUBLIC ACTION</span></div></article>
+  <article class="panel"><p class="eyebrow">TECHNOLOGY</p><h2>Implemented stack</h2><p>Python · Django · Django REST Framework · Pandas · NumPy · scikit-learn · Joblib · PostgreSQL configuration · PostGIS-ready GIS workflow · HTML · CSS · Vanilla JavaScript · Leaflet.js · Chart.js · Celery and Redis seams.</p></article>
+</section>
+
+<section class="info-section two-column">
+  <article class="panel"><p class="eyebrow">ALERTS & HEALTH</p><h2>Contextual warnings, not false certainty</h2><p>Heat alerts are based on actual calculated or modelled risk thresholds. The platform distinguishes calculated thermal risk from an ML health-risk estimate and does not claim clinical accuracy.</p><a class="button quiet" href="/alerts/">View heat-risk details</a></article>
+  <article class="panel"><p class="eyebrow">CURRENT SCOPE</p><h2>Implemented now, extended later</h2><p>Currently implemented: public dashboard, real weather integration, calculations, forecast, search, GPS, map interaction, what-if simulation, health-risk seam and deployment configuration.</p><p class="muted">Limitations: UTCI/WBGT are screening approximations, ward boundaries depend on available data, and no health-outcome dataset is bundled. Future scope should be added only with validated datasets and authoritative GIS sources.</p></article>
+</section>
+
+<section class="info-section closing-callout"><p class="eyebrow">GROUND ZERO · SIH 2026</p><h2>Understand the heat before it becomes a threat.</h2><p>Smart India Hackathon 2026 · Problem Statement 26083 · Ministry of Earth Sciences</p><div class="overview-actions"><button id="overview-detect-bottom" class="button primary">Detect my location</button><a class="button quiet" href="/dashboard/">Explore dashboard</a><a class="button quiet" href="/map/">View India risk map</a></div></section>
 {% endblock %}
+{% block scripts %}<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script><script src="/static/js/overview.js"></script>{% endblock %}
