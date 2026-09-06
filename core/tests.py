@@ -59,6 +59,11 @@ class ApiTests(TestCase):
         self.assertEqual(response.status_code, 400)
         self.assertIn("error", response.json())
 
+    def test_population_endpoint_is_explicit_when_unconfigured(self):
+        response = self.client.get("/api/population/location/?lat=17.7&lon=83.2")
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.json()["status"], "DATA UNAVAILABLE")
+
     @patch("core.views.get_forecast", return_value=[
         {"date": "2026-09-06", "temperature_min": 27, "temperature_max": 35,
          "humidity": 60, "wind_speed": 3, "solar_radiation": 500, "precipitation": 0, "source": "test"}

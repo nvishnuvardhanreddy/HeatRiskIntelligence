@@ -51,6 +51,8 @@ build.sh, render.yaml    Render build/start/health deployment configuration
 | `DB_CONN_MAX_AGE` | PostgreSQL connection lifetime in seconds |
 | `WEATHER_REQUEST_TIMEOUT` | Open-Meteo/Nominatim timeout |
 | `GOOGLE_MAPS_API_KEY` | Optional server-side Google Maps Geocoding key for precise area/district names |
+| `POPULATION_API_URL` | Optional server-side population provider endpoint |
+| `POPULATION_API_KEY` | Optional server-side population provider key |
 | `SECURE_SSL_REDIRECT` | Enable HTTPS redirect in a proxy deployment |
 | `HEALTH_MODEL_PATH` | Optional evaluated joblib classifier |
 

@@ -9,6 +9,8 @@ from ml_models.prediction import predict_health_risk
 from services.weather_service import get_current, get_forecast, get_hourly, search
 from weather.providers.base import WeatherUnavailable
 from weather.validation import forecast_anomalies, validate_observation
+from population.services.population_service import population_for_location
+from population.services.population_provider import PopulationUnavailable
 
 
 def _coordinates(request):
@@ -126,6 +128,17 @@ def reverse_geocode(request):
         return JsonResponse({"location": lookup_location(latitude, longitude)})
     except ValueError as exc:
         return _error(str(exc))
+
+
+@require_GET
+def population_location(request):
+    try:
+        latitude, longitude = _coordinates(request)
+        return JsonResponse(population_for_location(latitude, longitude))
+    except ValueError as exc:
+        return _error(str(exc))
+    except PopulationUnavailable as exc:
+        return _error(str(exc), 503)
 
 
 @require_GET

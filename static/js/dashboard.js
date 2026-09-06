@@ -15,10 +15,23 @@
       renderCurrent(current);
       const forecast = await GZ.get("/api/weather/forecast/", location);
       renderForecast(forecast.forecast || []);
+      try {
+        const population = await GZ.get("/api/population/location/", location);
+        renderPopulation(population);
+      } catch (populationError) {
+        renderPopulation({ status: "DATA UNAVAILABLE", population: null });
+      }
       $("location-message").textContent = "Updated from the live provider.";
     } catch (error) {
       showError(error.message + " Live weather data is not replaced with demo values.");
       $("location-message").textContent = "Try another location or try again shortly.";
+    }
+    function renderPopulation(data) {
+      const value = data.population === null || data.population === undefined ? "DATA UNAVAILABLE" : Number(data.population).toLocaleString("en-IN");
+      if ($("decision-population")) $("decision-population").textContent = value;
+      if ($("priority-population")) $("priority-population").textContent = value;
+      if ($("worker-population")) $("worker-population").textContent = value;
+      if ($("vulnerable-population")) $("vulnerable-population").textContent = value;
     }
   }
   function renderCurrent(data) {
