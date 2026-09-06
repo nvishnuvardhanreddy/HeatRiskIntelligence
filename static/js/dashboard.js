@@ -24,7 +24,11 @@
   function renderCurrent(data) {
     const w = data.weather, t = data.thermal, loc = data.location;
     $("location-name").textContent = loc.name || "Selected location";
-    $("location-detail").textContent = [loc.admin_area, loc.country, `${Number(loc.latitude).toFixed(4)}°, ${Number(loc.longitude).toFixed(4)}°`].filter(Boolean).join(" · ");
+    if ($("location-state")) $("location-state").textContent = [loc.admin_area, loc.country].filter(Boolean).join(" · ") || "Area identified from coordinates";
+    if ($("location-district")) $("location-district").textContent = loc.district || "DATA UNAVAILABLE";
+    if ($("location-latitude")) $("location-latitude").textContent = `${Number(loc.latitude).toFixed(4)}°`;
+    if ($("location-longitude")) $("location-longitude").textContent = `${Number(loc.longitude).toFixed(4)}°`;
+    $("location-detail").textContent = `Location source: ${loc.source || "backend geocoding"}`;
     $("htsi-score").textContent = t.htsi.score;
     $("htsi-band").textContent = t.htsi.band;
     if ($("risk-progress")) $("risk-progress").style.width = `${Math.max(0, Math.min(100, t.htsi.score))}%`;

@@ -50,6 +50,7 @@ build.sh, render.yaml    Render build/start/health deployment configuration
 | `DB_ENGINE` | Optional PostgreSQL/PostGIS backend override |
 | `DB_CONN_MAX_AGE` | PostgreSQL connection lifetime in seconds |
 | `WEATHER_REQUEST_TIMEOUT` | Open-Meteo/Nominatim timeout |
+| `GOOGLE_MAPS_API_KEY` | Optional server-side Google Maps Geocoding key for precise area/district names |
 | `SECURE_SSL_REDIRECT` | Enable HTTPS redirect in a proxy deployment |
 | `HEALTH_MODEL_PATH` | Optional evaluated joblib classifier |
 
@@ -91,7 +92,9 @@ dataset only, not clinical validity.
 
 ## Data classification and limitations
 
-Open-Meteo and Nominatim responses are public external data. Coordinates
+Open-Meteo responses are public external data. When `GOOGLE_MAPS_API_KEY` is set,
+reverse geocoding uses Google Maps Geocoding API; otherwise Nominatim is used as
+the fallback. Coordinates
 entered by a user are transient browser state unless an application extension
 chooses to persist them; no personal identity is required. Thermal values are
 screening calculations, not medical advice. WBGT uses an estimated globe

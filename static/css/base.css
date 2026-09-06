@@ -45,6 +45,9 @@ input:focus { outline: 2px solid var(--cyan); outline-offset: 1px; }
 .dashboard-grid { display: grid; grid-template-columns: 1fr 1.3fr; gap: 18px; }
 .location-heading { padding: 25px 0; }
 .location-heading h2 { font-size: 2rem; margin: 0 0 4px; }
+.location-state { color: var(--cyan); font-weight: 700; margin: 0 0 14px; }
+.location-facts { max-width: 360px; font-size: 13px; }
+.location-facts dt, .location-facts dd { padding: 6px 0; }
 .risk-card { padding: 23px; border-top: 5px solid var(--orange); }
 .card-top, .section-heading { display: flex; align-items: center; justify-content: space-between; gap: 14px; }
 .card-top { font-weight: 700; }
