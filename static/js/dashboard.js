@@ -54,6 +54,28 @@
       const actions = data.risk.band === "LOW" ? ["Maintain hydration.", "Use normal heat precautions."] : ["Stay hydrated.", "Reduce prolonged outdoor exposure.", "Take regular breaks.", "Monitor vulnerable people.", "Follow official heat-health advisories."];
       $("warning-actions").innerHTML = actions.map(action => `<li>${action}</li>`).join("");
     }
+    const band = data.risk.band, score = Number(t.htsi.score);
+    const response = score >= 81 ? "EMERGENCY" : score >= 41 ? "ACTION REQUIRED" : "WATCH";
+    if ($("response-level")) $("response-level").textContent = `RESPONSE LEVEL · ${response}`;
+    if ($("decision-htsi")) $("decision-htsi").textContent = score;
+    if ($("decision-health")) $("decision-health").textContent = data.health.label || "BASELINE ESTIMATE";
+    if ($("priority-location")) $("priority-location").textContent = loc.name || "Selected area";
+    if ($("priority-score")) $("priority-score").textContent = score;
+    if ($("priority-band")) $("priority-band").textContent = band;
+    if ($("action-plan")) {
+      const urgent = score >= 61;
+      const actions = [
+        ["Monitor thermal conditions", urgent ? "RECOMMENDED" : "STANDBY"],
+        ["Promote hydration and cooling breaks", score >= 21 ? "RECOMMENDED" : "STANDBY"],
+        ["Verify drinking-water supply", score >= 41 ? "RECOMMENDED" : "STANDBY"],
+        ["Prioritise vulnerable-population checks", score >= 41 ? "RECOMMENDED" : "STANDBY"],
+        ["Adjust outdoor-work hours", score >= 61 ? "RECOMMENDED" : "STANDBY"],
+      ];
+      $("action-plan").innerHTML = actions.map((item, index) => `<li><span>${String(index + 1).padStart(2, "0")}</span>${item[0]} <b>${item[1]}</b></li>`).join("");
+    }
+    if ($("intervention-triggers")) {
+      $("intervention-triggers").innerHTML = `<div><strong>THERMAL RISK</strong><span>${band} · HTSI ${score}</span></div><div><strong>EXPOSURE</strong><span>DATA UNAVAILABLE</span></div><div><strong>HEALTH OUTCOME</strong><span>${data.health.label || "DATA UNAVAILABLE"}</span></div>`;
+    }
   }
   function renderForecast(rows) {
     $("forecast-strip").innerHTML = rows.map(row => `<article class="forecast-item"><span>${row.date}</span><strong>${GZ.number(row.temperature_min, "°")} / ${GZ.number(row.temperature_max, "°")}</strong><span>HTSI ${row.htsi.score}</span><span class="band">${row.htsi.band}</span><small class="status forecast">FORECAST · CALCULATED</small></article>`).join("");

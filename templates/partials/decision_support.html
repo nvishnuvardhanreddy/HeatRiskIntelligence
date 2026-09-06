@@ -1,0 +1,39 @@
+<section class="decision-support info-section" aria-label="Heat action decision support">
+  <div class="section-heading">
+    <div><p class="eyebrow">AUTOMATED HEAT ACTION PLAN</p><h2>Response planning</h2></div>
+    <span id="response-level" class="status calculated">RESPONSE LEVEL · WAITING</span>
+  </div>
+  <div class="decision-grid">
+    <article class="panel">
+      <p class="eyebrow">CURRENT DECISION SIGNAL</p>
+      <div class="decision-score"><strong id="decision-htsi">—</strong><span>HTSI / 100</span></div>
+      <dl>
+        <dt>Population</dt><dd>DATA UNAVAILABLE</dd>
+        <dt>Hospital impact</dt><dd>DATA UNAVAILABLE</dd>
+        <dt>Mortality indicator</dt><dd>DATA UNAVAILABLE</dd>
+        <dt>Health output</dt><dd id="decision-health">DATA UNAVAILABLE</dd>
+      </dl>
+      <small class="status">PROTOTYPE PRIORITY · NO CLINICAL CLAIM</small>
+    </article>
+    <article class="panel">
+      <p class="eyebrow">RECOMMENDED ACTIONS</p>
+      <ol id="action-plan" class="action-plan">
+        <li><span>01</span>Monitor thermal conditions <b>STANDBY</b></li>
+        <li><span>02</span>Promote hydration and cooling breaks <b>STANDBY</b></li>
+        <li><span>03</span>Prioritise vulnerable-population checks <b>STANDBY</b></li>
+      </ol>
+    </article>
+  </div>
+  <div class="section-heading compact-heading"><div><p class="eyebrow">EMERGENCY PRIORITISATION</p><h2>Which areas need help first?</h2></div><span class="status">WARD DATA · DATA UNAVAILABLE</span></div>
+  <div class="priority-grid">
+    <article class="priority-card"><strong>#1</strong><h3 id="priority-location">Selected area</h3><b id="priority-score">—</b><span id="priority-band">Awaiting live HTSI</span><small>Population: DATA UNAVAILABLE</small></article>
+    <article class="priority-card"><strong>#2</strong><h3>Nearby areas</h3><b>DATA UNAVAILABLE</b><span>Requires ward risk records</span><small>No unsupported ranking shown</small></article>
+    <article class="priority-card"><strong>#3</strong><h3>Regional context</h3><b>DATA UNAVAILABLE</b><span>Requires GIS dataset</span><small>No fabricated population</small></article>
+  </div>
+  <div class="section-heading compact-heading"><div><p class="eyebrow">PRE-EMPTIVE INTERVENTION TRIGGERS</p><h2>Act before conditions peak</h2></div></div>
+  <div id="intervention-triggers" class="trigger-grid">
+    <div><strong>THERMAL RISK</strong><span>Waiting for a selected location</span></div>
+    <div><strong>EXPOSURE</strong><span>DATA UNAVAILABLE</span></div>
+    <div><strong>HEALTH OUTCOME</strong><span>DATA UNAVAILABLE</span></div>
+  </div>
+</section>
