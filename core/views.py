@@ -234,7 +234,7 @@ def weather_forecast(request):
         except WeatherUnavailable:
             rows = []
             for day in range(5):
-                observation = _demo_observation(latitude, longitude, day * 24 + 12)
+                observation = _demo_observation(latitude, longitude, day * 24)
                 rows.append(daily_risk({
                     "date": (datetime.utcnow() + timedelta(days=day)).date().isoformat(),
                     "temperature_min": round(observation["temperature"] - 5, 1),

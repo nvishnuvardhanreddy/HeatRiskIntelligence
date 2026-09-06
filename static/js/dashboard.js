@@ -14,7 +14,9 @@
       const current = await GZ.get("/api/risk/current/", location);
       renderCurrent(current);
       renderPopulation(current.population || {});
-      let optionalStatus = "Updated from the live provider.";
+      let optionalStatus = current.data_mode === "DEMO"
+        ? "Live weather provider temporarily unavailable – showing demo data."
+        : "Updated from the live provider.";
       try {
         const nearby = await GZ.get("/api/risk/nearby/", location);
         renderNearby(nearby);
