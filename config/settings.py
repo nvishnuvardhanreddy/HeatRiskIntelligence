@@ -9,11 +9,18 @@ load_dotenv(BASE_DIR / ".env")
 
 SECRET_KEY = os.getenv("SECRET_KEY", "ground-zero-development-key")
 DEBUG = os.getenv("DEBUG", "1").lower() in {"1", "true", "yes"}
-ALLOWED_HOSTS = [
+configured_hosts = {
     host.strip()
-    for host in os.getenv("ALLOWED_HOSTS", "localhost,127.0.0.1,testserver").split(",")
+    for host in os.getenv(
+        "ALLOWED_HOSTS",
+        "localhost,127.0.0.1,testserver",
+    ).split(",")
     if host.strip()
-]
+}
+render_hostname = os.getenv("RENDER_EXTERNAL_HOSTNAME", "").strip()
+if render_hostname:
+    configured_hosts.add(render_hostname)
+ALLOWED_HOSTS = sorted(configured_hosts)
 
 INSTALLED_APPS = [
     "django.contrib.staticfiles",

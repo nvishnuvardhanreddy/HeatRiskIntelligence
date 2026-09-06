@@ -44,6 +44,7 @@ build.sh, render.yaml    Render build/start/health deployment configuration
 | `SECRET_KEY` | Django signing key; set a secret in production |
 | `DEBUG` | `0` in production |
 | `ALLOWED_HOSTS` | Comma-separated hostnames |
+| `RENDER_EXTERNAL_HOSTNAME` | Optional Render-provided hostname, added automatically to allowed hosts |
 | `CSRF_TRUSTED_ORIGINS` | Comma-separated HTTPS origins |
 | `DATABASE_URL` | PostgreSQL URL; absent means local SQLite |
 | `DB_ENGINE` | Optional PostgreSQL/PostGIS backend override |
