@@ -4,9 +4,9 @@
 <section class="overview-hero">
   <p class="eyebrow">HUMAN THERMAL STRESS EARLY WARNING</p>
   <h1>Predicting how<br><span>dangerous heat can become.</span></h1>
-  <p class="lede">GROUND ZERO combines real weather data, thermal indices, machine learning and GIS intelligence to understand human heat risk.</p>
+  <p class="lede">Real weather. Thermal stress. Human risk. Action.</p>
   <div class="overview-actions"><button id="overview-detect" class="button primary">Detect my location</button><a class="button quiet" href="/dashboard/">Explore live risk</a></div>
-  <p id="overview-status" class="muted" role="status">Live weather is fetched through the Django backend. No synthetic weather is displayed.</p>
+  <p id="overview-status" class="muted" role="status">Select a location to view current conditions and practical guidance.</p>
 </section>
 <section class="search-panel" aria-label="Location search">
   <p class="eyebrow">LOCATION SEARCH</p>
@@ -24,11 +24,25 @@
     <article class="metric"><span>Humidity</span><strong id="humidity">—</strong><small class="status live">LIVE</small></article>
     <article class="metric"><span>Wind</span><strong id="wind">—</strong><small class="status live">LIVE</small></article>
     <article class="metric"><span>Solar radiation</span><strong id="solar">—</strong><small id="solar-label" class="status estimated">ESTIMATED IF NEEDED</small></article>
+    <article class="metric"><span>Wind direction</span><strong id="wind-direction">—</strong><small class="status live">LIVE</small></article>
+    <article class="metric"><span>Pressure</span><strong id="pressure">—</strong><small class="status live">LIVE</small></article>
+    <article class="metric"><span>Cloud cover</span><strong id="cloud-cover">—</strong><small class="status live">LIVE</small></article>
+    <article class="metric"><span>UV index</span><strong id="uv-index">—</strong><small class="status live">LIVE</small></article>
     <article class="metric"><span>Heat Index</span><strong id="heat-index">—</strong><small class="status calculated">CALCULATED</small></article>
     <article class="metric"><span>WBGT</span><strong id="wbgt">—</strong><small class="status calculated">CALCULATED</small></article>
     <article class="metric"><span>UTCI</span><strong id="utci">—</strong><small class="status calculated">CALCULATED</small></article>
     <article class="metric"><span>Feels like</span><strong id="apparent-temperature">—</strong><small class="status live">LIVE</small></article>
   </div>
+</section>
+<section class="info-section panel">
+  <div class="section-heading"><div><p class="eyebrow">RISK DRIVERS</p><h2>What is driving this risk?</h2></div><span class="status calculated">CALCULATED</span></div>
+  <div class="risk-drivers">
+    <div><span>Temperature</span><strong id="driver-temperature">—</strong><i><b id="driver-temperature-bar"></b></i></div>
+    <div><span>Humidity</span><strong id="driver-humidity">—</strong><i><b id="driver-humidity-bar"></b></i></div>
+    <div><span>Wind</span><strong id="driver-wind">—</strong><i><b id="driver-wind-bar"></b></i></div>
+    <div><span>Solar radiation</span><strong id="driver-solar">—</strong><i><b id="driver-solar-bar"></b></i></div>
+  </div>
+  <p id="driver-summary" class="muted">Risk drivers will appear after a location is selected.</p>
 </section>
 <section class="two-column info-section">
   <article class="panel"><p class="eyebrow">HEALTH RISK INTELLIGENCE</p><h2>Human impact signal</h2><div class="health-stat-grid"><div><strong id="health-score">Planning signal</strong><small>Health risk · CALCULATED</small></div><div><strong id="health-priority">Planning signal</strong><small>Priority · CALCULATED</small></div><div><strong id="health-exposure">Planning signal</strong><small>Thermal exposure · CALCULATED</small></div><div><strong id="health-vulnerability">Planning signal</strong><small>Vulnerability · CALCULATED</small></div></div><p id="health-summary">Thermal and health indicators will update after a location is selected.</p><span class="status">PUBLIC SAFETY SIGNAL</span></article>

@@ -56,6 +56,10 @@
     $("wind").textContent = GZ.wind(w.wind_speed);
     $("solar").textContent = GZ.number(w.solar_radiation, " W/m²");
     $("solar-label").textContent = w.solar_status || "LIVE";
+    if ($("wind-direction")) $("wind-direction").textContent = GZ.number(w.wind_direction, "°");
+    if ($("pressure")) $("pressure").textContent = GZ.number(w.pressure, " hPa");
+    if ($("cloud-cover")) $("cloud-cover").textContent = GZ.number(w.cloud_cover, "%");
+    if ($("uv-index")) $("uv-index").textContent = GZ.number(w.uv_index, "");
     $("heat-index").textContent = GZ.number(t.heat_index, "°C");
     $("wbgt").textContent = GZ.number(t.wbgt, "°C");
     $("utci").textContent = GZ.number(t.utci, "°C");
@@ -98,6 +102,20 @@
     }
     if ($("intervention-triggers")) {
       $("intervention-triggers").innerHTML = `<div><strong>THERMAL RISK</strong><span>${band} · HTSI ${score}</span></div><div><strong>EXPOSURE</strong><span>${GZ.number(data.health.exposure, "")} / 100 · CALCULATED</span></div><div><strong>VULNERABILITY</strong><span>${GZ.number(data.health.vulnerability, "")} / 100 · CALCULATED</span></div>`;
+    }
+    const driverValues = {
+      temperature: Math.max(0, Math.min(100, (Number(w.temperature) - 20) * 4)),
+      humidity: Number(w.humidity),
+      wind: Math.max(0, Math.min(100, 100 - Number(w.wind_speed) * 12)),
+      solar: Math.max(0, Math.min(100, Number(w.solar_radiation) / 10))
+    };
+    [["temperature", GZ.number(w.temperature, "°C")], ["humidity", GZ.number(w.humidity, "%")],
+      ["wind", GZ.wind(w.wind_speed)], ["solar", GZ.number(w.solar_radiation, " W/m²")]].forEach(([name, value]) => {
+      if ($(`driver-${name}`)) $(`driver-${name}`).textContent = value;
+      if ($(`driver-${name}-bar`)) $(`driver-${name}-bar`).style.width = `${driverValues[name]}%`;
+    });
+    if ($("driver-summary")) {
+      $("driver-summary").textContent = `${t.htsi.band} risk reflects temperature, humidity, wind and solar exposure at the selected location.`;
     }
   }
   function renderForecast(rows) {

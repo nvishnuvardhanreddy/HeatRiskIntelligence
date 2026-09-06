@@ -30,10 +30,24 @@
     <article class="metric"><span>Humidity</span><strong id="humidity">—</strong><small class="status live">LIVE</small></article>
     <article class="metric"><span>Wind</span><strong id="wind">—</strong><small class="status live">LIVE</small></article>
     <article class="metric"><span>Solar radiation</span><strong id="solar">—</strong><small id="solar-label" class="status estimated">ESTIMATED IF NEEDED</small></article>
+    <article class="metric"><span>Wind direction</span><strong id="wind-direction">—</strong><small class="status live">LIVE</small></article>
+    <article class="metric"><span>Pressure</span><strong id="pressure">—</strong><small class="status live">LIVE</small></article>
+    <article class="metric"><span>Cloud cover</span><strong id="cloud-cover">—</strong><small class="status live">LIVE</small></article>
+    <article class="metric"><span>UV index</span><strong id="uv-index">—</strong><small class="status live">LIVE</small></article>
     <article class="metric"><span>Heat Index</span><strong id="heat-index">—</strong><small class="status calculated">CALCULATED</small></article>
     <article class="metric"><span>WBGT</span><strong id="wbgt">—</strong><small class="status calculated">CALCULATED</small></article>
     <article class="metric"><span>UTCI</span><strong id="utci">—</strong><small class="status calculated">CALCULATED</small></article>
   </div>
+</section>
+<section class="info-section panel">
+  <div class="section-heading"><div><p class="eyebrow">RISK DRIVERS</p><h2>What is driving this risk?</h2></div><span class="status calculated">CALCULATED</span></div>
+  <div class="risk-drivers">
+    <div><span>Temperature</span><strong id="driver-temperature">—</strong><i><b id="driver-temperature-bar"></b></i></div>
+    <div><span>Humidity</span><strong id="driver-humidity">—</strong><i><b id="driver-humidity-bar"></b></i></div>
+    <div><span>Wind</span><strong id="driver-wind">—</strong><i><b id="driver-wind-bar"></b></i></div>
+    <div><span>Solar radiation</span><strong id="driver-solar">—</strong><i><b id="driver-solar-bar"></b></i></div>
+  </div>
+  <p id="driver-summary" class="muted">Risk drivers will appear after a location is selected.</p>
 </section>
 
 <section class="section-heading"><div><p class="eyebrow">OUTLOOK</p><h2>Five-day heat risk</h2></div><a class="text-link" href="/forecast/">Open full forecast →</a></section>
