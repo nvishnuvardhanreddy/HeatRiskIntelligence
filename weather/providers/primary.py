@@ -17,7 +17,9 @@ class OpenMeteoProvider(WeatherProvider):
         last_error = None
         for attempt in range(3):
             try:
-                response = requests.get(
+                session = requests.Session()
+                session.trust_env = False
+                response = session.get(
                     url,
                     params=params,
                     timeout=max(10, settings.WEATHER_REQUEST_TIMEOUT),
