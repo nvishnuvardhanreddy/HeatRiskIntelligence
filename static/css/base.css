@@ -79,6 +79,7 @@ input:focus { outline: 2px solid var(--cyan); outline-offset: 1px; }
 .action-panel li { margin: 10px 0; }
 .notice { padding: 13px 16px; border-left: 4px solid var(--cyan); background: #102f3a; margin: 18px 0; }
 .notice.error { border-color: var(--red); background: #3b1d24; color: #ffb5ac; }
+.notice.warning { border-color: var(--orange); background: #3b2b1d; color: #ffd19b; }
 .notice.info { border-color: #6b9eb5; }
 .page-header { max-width: 760px; margin-bottom: 30px; }
 .page-header h1 { font-size: clamp(2.1rem, 4vw, 3.5rem); line-height: 1.1; letter-spacing: -.04em; margin: 0 0 12px; }

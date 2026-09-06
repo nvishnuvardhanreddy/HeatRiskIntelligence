@@ -88,6 +88,15 @@ class ApiTests(TestCase):
         self.assertGreater(body["weather"]["temperature"], 0)
         self.assertIn("htsi", body["thermal"])
 
+    @patch("core.views.get_forecast", side_effect=WeatherUnavailable)
+    def test_forecast_uses_demo_weather_when_provider_fails(self, forecast):
+        response = self.client.get("/api/weather/forecast/?lat=17.7&lon=83.2")
+        self.assertEqual(response.status_code, 200)
+        body = response.json()
+        self.assertEqual(body["data_mode"], "DEMO")
+        self.assertEqual(len(body["forecast"]), 5)
+        self.assertGreater(body["forecast"][0]["solar_radiation"], 0)
+
     def test_invalid_coordinates_are_rejected(self):
         response = self.client.get("/api/weather/current/?lat=200&lon=20")
         self.assertEqual(response.status_code, 400)

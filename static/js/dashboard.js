@@ -1,7 +1,13 @@
 (function () {
   const $ = id => document.getElementById(id);
   let chart;
-  function showError(message) { $("data-error").textContent = message; $("data-error").hidden = false; }
+  function showError(message, warning = false) {
+    const banner = $("data-error");
+    banner.textContent = message;
+    banner.classList.toggle("warning", warning);
+    banner.classList.toggle("error", !warning);
+    banner.hidden = false;
+  }
   function clearError() { $("data-error").hidden = true; }
   function select(location) {
     GZ.setLocation(location);
@@ -64,7 +70,7 @@
     const demoMode = data.data_mode === "DEMO" || w.data_mode === "DEMO";
     if (demoMode) {
       console.warn("[GROUND ZERO] Live weather unavailable; showing deterministic demo weather.", loc);
-      showError("Live weather provider temporarily unavailable – showing demo data.");
+      showError("Live weather provider temporarily unavailable – showing demo data.", true);
     } else {
       console.info("[GROUND ZERO] Using live weather data.", loc);
       clearError();
