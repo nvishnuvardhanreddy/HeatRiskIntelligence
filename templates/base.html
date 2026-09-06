@@ -12,30 +12,14 @@
 <body>
   <a class="skip-link" href="#main">Skip to content</a>
   <header class="topbar">
-    <a class="brand" href="/"><span class="brand-mark">GZ</span><span>GROUND ZERO<small>Heat risk intelligence</small></span></a>
+    <a class="brand" href="/"><span class="brand-mark">GZ</span><span>GROUND ZERO<small>Human thermal intelligence</small></span></a>
     <nav class="topnav" aria-label="Primary">
-      <a href="/">Overview</a><a href="/dashboard/">Dashboard</a><a href="/what-if/">What-If Simulation</a>
-      <a href="/forecast/">Forecast</a><a href="/alerts/">Alerts</a><a href="/map/">GPS Location</a>
+      <a href="/">Overview</a><a href="/dashboard/">Dashboard</a><a href="/what-if/">What-If</a>
+      <a href="/forecast/">Forecast</a><a href="/analysis/">Analysis</a><a href="/map/">GIS Map</a><a href="/gps/">📍 GPS Location</a>
     </nav>
     <button class="menu-button" aria-label="Toggle navigation" aria-expanded="false">Menu</button>
   </header>
-  <div class="shell">
-    <aside class="sidebar" aria-label="Primary navigation">
-      <div class="nav-group"><strong>MONITOR</strong>
-        <a href="/">Overview</a><a href="/dashboard/">Dashboard</a><a href="/what-if/">What-If Simulation</a><a href="/map/">GPS Location</a><a href="/forecast/">Forecast</a><a href="/hourly/">Hourly heat</a>
-      </div>
-      <div class="nav-group"><strong>ANALYSIS</strong>
-        <a href="/analysis/">Thermal analysis</a><a href="/health-risk/">Health risk</a><a href="/history/">History</a><a href="/compare/">Compare</a>
-      </div>
-      <div class="nav-group"><strong>PUBLIC GUIDANCE</strong>
-        <a href="/workers/">Outdoor workers</a><a href="/alerts/">Alerts</a>
-      </div>
-      <div class="nav-group"><strong>LEARN</strong>
-        <a href="/methodology/">Methodology</a><a href="/data-sources/">Data sources</a><a href="/about/">About</a>
-      </div>
-    </aside>
-    <main id="main" class="content">{% block content %}{% endblock %}</main>
-  </div>
+  <main id="main" class="content">{% block content %}{% endblock %}</main>
   <footer class="footer">GROUND ZERO · Know the heat. Understand the risk. Act early. <span>Public safety information, not medical advice.</span></footer>
   <script src="{% static 'js/app.js' %}"></script>
   {% block scripts %}{% endblock %}

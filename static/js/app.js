@@ -24,7 +24,7 @@
     locationFromCoords(latitude, longitude) { return { latitude: Number(latitude), longitude: Number(longitude), name: "Selected location", admin_area: "", country: "" }; }
   };
   document.querySelector(".menu-button")?.addEventListener("click", function () {
-    const nav = document.querySelector(".sidebar");
+    const nav = document.querySelector(".topnav");
     nav.classList.toggle("open");
     this.setAttribute("aria-expanded", nav.classList.contains("open"));
   });
