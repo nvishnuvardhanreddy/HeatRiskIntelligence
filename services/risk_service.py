@@ -33,5 +33,15 @@ def daily_risk(day: dict) -> dict:
         "solar_radiation": float(day["solar_radiation"]), "night_temperature": float(day["temperature_min"]),
         "vulnerability": 0,
     })
-    return {**day, **result, "health_risk": health["score"], "health_band": result["htsi"]["band"],
-            "health_label": health["label"], "status": "FORECAST"}
+    htsi = result["htsi"]
+    return {
+        **day,
+        **result,
+        "risk": {"score": htsi["score"], "band": htsi["band"], "label": "CALCULATED"},
+        "risk_score": htsi["score"],
+        "risk_band": htsi["band"],
+        "health_risk": health["score"],
+        "health_band": htsi["band"],
+        "health_label": health["label"],
+        "status": "FORECAST",
+    }

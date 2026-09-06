@@ -3,11 +3,16 @@ from django.urls import path
 from core import views
 
 urlpatterns = [
-    path("", views.dashboard, name="dashboard"),
+    path("", views.overview_page, name="overview"),
+    path("overview/", views.overview_page, name="overview-page"),
+    path("dashboard/", views.dashboard, name="dashboard"),
+    path("what-if/", views.what_if_page, name="what-if"),
+    path("what-if-simulation/", views.what_if_page, name="what-if-simulation"),
     path("analysis/", views.analysis_page, name="analysis"),
     path("forecast/", views.forecast_page, name="forecast"),
     path("hourly/", views.hourly_page, name="hourly"),
     path("map/", views.map_page, name="map"),
+    path("gps/", views.map_page, name="gps-location"),
     path("health-risk/", views.health_page, name="health"),
     path("workers/", views.workers_page, name="workers"),
     path("history/", views.history_page, name="history"),
@@ -25,5 +30,10 @@ urlpatterns = [
     path("api/risk/current/", views.risk_current, name="risk-current"),
     path("api/risk/forecast/", views.risk_forecast, name="risk-forecast"),
     path("api/risk/health/", views.risk_health, name="risk-health"),
+    path("api/what-if/", views.what_if_api, name="what-if-api"),
+    path("api/risk/what-if/", views.what_if_api, name="risk-what-if"),
+    path("api/what-if-simulation/", views.what_if_api, name="what-if-simulation-api"),
+    path("health/", views.health_check, name="health-check"),
+    path("healthz/", views.health_check, name="healthz"),
     path("api/thermal/<slug:metric>/", views.thermal_metric, name="thermal-metric"),
 ]

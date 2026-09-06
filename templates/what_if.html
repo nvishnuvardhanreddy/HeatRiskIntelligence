@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+{% block content %}
+<section class="page-header"><p class="eyebrow">TRANSPARENT SCENARIO TOOL</p><h1>What-if simulation</h1><p>Adjust atmospheric inputs to explore thermal stress. This is a calculation, not a weather observation or forecast.</p></section>
+<form id="what-if-form" class="panel scenario-form">
+  <div><label for="scenario-temperature">Temperature (°C)</label><input id="scenario-temperature" name="temperature" type="number" value="35" min="-80" max="70" step="0.1" required></div>
+  <div><label for="scenario-humidity">Relative humidity (%)</label><input id="scenario-humidity" name="humidity" type="number" value="60" min="0" max="100" step="1" required></div>
+  <div><label for="scenario-wind">Wind (m/s)</label><input id="scenario-wind" name="wind_speed" type="number" value="2" min="0" step="0.1" required></div>
+  <div><label for="scenario-solar">Solar radiation (W/m²)</label><input id="scenario-solar" name="solar_radiation" type="number" value="500" min="0" step="1" required></div>
+  <button class="button primary" type="submit">Calculate scenario</button>
+</form>
+<div id="scenario-error" class="notice error" hidden role="alert"></div>
+<section id="scenario-result" class="scenario-result" aria-live="polite"><div class="empty-state">Enter values and calculate to see the result.</div></section>
+{% endblock %}
+{% block scripts %}<script src="/static/js/what-if.js"></script>{% endblock %}

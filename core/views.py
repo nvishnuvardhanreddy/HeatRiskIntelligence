@@ -1,6 +1,6 @@
 from django.http import JsonResponse
 from django.shortcuts import render
-from django.views.decorators.http import require_GET
+from django.views.decorators.http import require_GET, require_http_methods
 
 from services.location_service import reverse_geocode as lookup_location
 from services.risk_service import daily_risk, thermal_summary
@@ -50,6 +50,14 @@ def _page(request, template, title):
 
 def dashboard(request):
     return _page(request, "dashboard.html", "Monitor")
+
+
+def overview_page(request):
+    return _page(request, "overview.html", "Overview")
+
+
+def what_if_page(request):
+    return _page(request, "what_if.html", "What-if simulation")
 
 
 def analysis_page(request):
@@ -229,6 +237,61 @@ def risk_health(request):
         return _error(str(exc))
     except WeatherUnavailable as exc:
         return _error(str(exc), 503)
+
+
+@require_GET
+def health_check(request):
+    """Small unauthenticated probe for Render and load balancers."""
+    return JsonResponse({"status": "ok", "service": "ground-zero"})
+
+
+@require_http_methods(["GET", "POST"])
+def what_if_api(request):
+    """Calculate a scenario from user-entered weather values.
+
+    Scenarios are deliberately separate from the Open-Meteo observation APIs:
+    they never masquerade as measured weather and are labelled as simulated.
+    """
+    inputs = request.GET if request.method == "GET" else request.POST
+
+    def value(*names):
+        for name in names:
+            raw = inputs.get(name)
+            if raw not in (None, ""):
+                return float(raw)
+        raise ValueError(f"Provide a numeric {names[0]} value.")
+
+    try:
+        temperature = value("temperature", "temp")
+        humidity = value("humidity", "rh")
+        wind = value("wind_speed", "wind")
+        solar = value("solar_radiation", "solar")
+        if not -80 <= temperature <= 70:
+            raise ValueError("Temperature must be between -80 and 70 °C.")
+        if not 0 <= humidity <= 100:
+            raise ValueError("Humidity must be between 0 and 100%.")
+        if wind < 0 or solar < 0:
+            raise ValueError("Wind and solar radiation cannot be negative.")
+        thermal = thermal_summary({
+            "temperature": temperature,
+            "humidity": humidity,
+            "wind_speed": wind,
+            "solar_radiation": solar,
+        })
+        return JsonResponse({
+            "scenario": {
+                "temperature": temperature,
+                "humidity": humidity,
+                "wind_speed": wind,
+                "solar_radiation": solar,
+            },
+            "thermal": thermal,
+            "risk": thermal["htsi"],
+            "label": "SIMULATED",
+            "disclaimer": "A what-if calculation, not observed or forecast weather.",
+        })
+    except (TypeError, ValueError) as exc:
+        return _error(str(exc))
 
 
 @require_GET

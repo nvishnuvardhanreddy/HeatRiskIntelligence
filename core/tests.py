@@ -22,6 +22,25 @@ SAMPLE_CURRENT = {
 
 
 class ApiTests(TestCase):
+    def test_health_endpoint(self):
+        response = self.client.get("/healthz/")
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.json()["status"], "ok")
+
+    def test_overview_and_what_if_pages(self):
+        self.assertEqual(self.client.get("/").status_code, 200)
+        self.assertEqual(self.client.get("/what-if/").status_code, 200)
+
+    def test_what_if_api_is_explicitly_simulated(self):
+        response = self.client.get(
+            "/api/what-if/?temperature=35&humidity=65&wind_speed=2&solar_radiation=500"
+        )
+        self.assertEqual(response.status_code, 200)
+        body = response.json()
+        self.assertEqual(body["label"], "SIMULATED")
+        self.assertIn("heat_index", body["thermal"])
+        self.assertIn("risk", body)
+
     @patch("core.views.lookup_location", return_value={
         "name": "Test City", "admin_area": "Test State", "country": "India",
         "latitude": 17.7, "longitude": 83.2,
@@ -49,4 +68,6 @@ class ApiTests(TestCase):
         self.assertEqual(response.status_code, 200)
         row = response.json()["forecast"][0]
         self.assertIn("htsi", row)
+        self.assertIn("risk_score", row)
+        self.assertIn("heat_index", row)
         self.assertEqual(row["status"], "FORECAST")

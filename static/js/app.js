@@ -14,7 +14,8 @@
     },
     async get(path, location, extra) {
       const response = await fetch(path + "?" + this.query(location, extra), { headers: { Accept: "application/json" } });
-      const body = await response.json();
+      let body;
+      try { body = await response.json(); } catch (_) { throw new Error("The service returned an unreadable response."); }
       if (!response.ok) throw new Error(body.error || "The service did not return data.");
       return body;
     },

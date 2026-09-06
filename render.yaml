@@ -1,0 +1,24 @@
+services:
+  - type: web
+    name: ground-zero
+    runtime: python
+    buildCommand: bash build.sh
+    startCommand: gunicorn config.wsgi:application --log-file -
+    healthCheckPath: /healthz/
+    envVars:
+      - key: SECRET_KEY
+        generateValue: true
+      - key: DEBUG
+        value: "0"
+      - key: ALLOWED_HOSTS
+        sync: false
+      - key: CSRF_TRUSTED_ORIGINS
+        sync: false
+      - key: DATABASE_URL
+        fromDatabase:
+          name: ground-zero-db
+          property: connectionString
+databases:
+  - name: ground-zero-db
+    databaseName: ground_zero
+    user: ground_zero

@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+{% block content %}
+<section class="overview-hero">
+  <p class="eyebrow">GROUND ZERO · HEAT RISK INTELLIGENCE</p>
+  <h1>See heat clearly.<br><span>Act before it peaks.</span></h1>
+  <p class="lede">A transparent dashboard using live Open-Meteo weather and explainable thermal-stress calculations. No synthetic weather is shown.</p>
+  <div class="overview-actions"><a class="button primary" href="/dashboard/">Open dashboard</a><a class="button quiet" href="/what-if/">Run a what-if</a></div>
+</section>
+<section class="overview-grid">
+  <article class="panel"><p class="eyebrow">LIVE WEATHER</p><h2>Current conditions</h2><p>Choose a location to see temperature, humidity, wind and observed or explicitly estimated solar radiation.</p><a class="text-link" href="/dashboard/">Choose a location →</a></article>
+  <article class="panel"><p class="eyebrow">FIVE DAYS</p><h2>Forecast-derived risk</h2><p>Daily minimum and maximum temperatures, humidity, wind, solar, Heat Index, WBGT, UTCI and HTSI are calculated from the provider forecast.</p><a class="text-link" href="/forecast/">View forecast →</a></article>
+  <article class="panel"><p class="eyebrow">SCENARIOS</p><h2>Plan for change</h2><p>Explore how heat, humidity, wind and sunlight change the calculated index. Scenario results are clearly labelled simulated.</p><a class="text-link" href="/what-if/">Open simulation →</a></article>
+</section>
+{% endblock %}
