@@ -20,6 +20,5 @@ def get_forecast(latitude, longitude):
     return provider().get_forecast(latitude, longitude)
 
 
-def search(query):
-    return provider().search(query)
-
+def search(query, count=8):
+    return provider().search(query, count=count)

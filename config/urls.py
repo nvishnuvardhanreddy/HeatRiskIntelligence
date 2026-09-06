@@ -25,6 +25,7 @@ urlpatterns = [
     path("api/locations/coordinates/", views.reverse_geocode, name="coordinates"),
     path("api/locations/reverse-geocode/", views.reverse_geocode, name="reverse-geocode"),
     path("api/population/location/", views.population_location, name="population-location"),
+    path("api/risk/nearby/", views.nearby_risk_api, name="nearby-risk"),
     path("api/weather/current/", views.weather_current, name="weather-current"),
     path("api/weather/hourly/", views.weather_hourly, name="weather-hourly"),
     path("api/weather/forecast/", views.weather_forecast, name="weather-forecast"),

@@ -13,29 +13,41 @@
     try {
       const current = await GZ.get("/api/risk/current/", location);
       renderCurrent(current);
+      renderPopulation(current.population || {});
+      const nearby = await GZ.get("/api/risk/nearby/", location);
+      renderNearby(nearby);
       const forecast = await GZ.get("/api/weather/forecast/", location);
       renderForecast(forecast.forecast || []);
-      try {
-        const population = await GZ.get("/api/population/location/", location);
-        renderPopulation(population);
-      } catch (populationError) {
-        renderPopulation({ status: "ESTIMATED", population: estimatePopulation(location) });
-      }
       $("location-message").textContent = "Updated from the live provider.";
     } catch (error) {
       showError(error.message + " Live weather data is not replaced with demo values.");
       $("location-message").textContent = "Try another location or try again shortly.";
     }
-    function estimatePopulation(location) {
-      return Math.round(50000 + (Math.abs(Number(location.latitude) * 7919 + Number(location.longitude) * 104729) % 150000));
+    function renderNearby(data) {
+      const areas = data.areas || [], district = data.district || {};
+      areas.slice(0, 2).forEach((area, index) => {
+        const rank = index + 2;
+        if ($(`nearby-area-${rank}`)) $(`nearby-area-${rank}`).textContent = area.area;
+        if ($(`nearby-score-${rank}`)) $(`nearby-score-${rank}`).textContent = `HTSI ${area.htsi}`;
+        if ($(`nearby-risk-${rank}`)) $(`nearby-risk-${rank}`).textContent = `${area.risk} · ${area.priority} PRIORITY`;
+        if ($(`nearby-population-${rank}`)) $(`nearby-population-${rank}`).textContent = Number(area.population).toLocaleString("en-IN");
+        if ($(`nearby-distance-${rank}`)) $(`nearby-distance-${rank}`).textContent = `${area.distance_km} km`;
+      });
+      if ($("district-name")) $("district-name").textContent = district.name || "District context";
+      if ($("district-score")) $("district-score").textContent = `HTSI ${district.average_htsi ?? "—"}`;
+      if ($("district-risk")) $("district-risk").textContent = district.risk || "Awaiting location";
+      if ($("district-population")) $("district-population").textContent = Number(district.population || 0).toLocaleString("en-IN");
+      if ($("district-high-risk")) $("district-high-risk").textContent = district.high_risk_areas ?? "—";
     }
     function renderPopulation(data) {
-      const value = data.population === null || data.population === undefined ? "Regional estimate" : Number(data.population).toLocaleString("en-IN");
+      const value = data.population === null || data.population === undefined ? "Select a location" : Number(data.population).toLocaleString("en-IN");
       if ($("decision-population")) $("decision-population").textContent = value;
       if ($("population-source")) $("population-source").textContent = data.status || "ESTIMATED";
       if ($("priority-population")) $("priority-population").textContent = value;
-      if ($("worker-population")) $("worker-population").textContent = value;
-      if ($("vulnerable-population")) $("vulnerable-population").textContent = value;
+      if ($("worker-population")) $("worker-population").textContent = data.outdoor_worker_population ? Number(data.outdoor_worker_population).toLocaleString("en-IN") : value;
+      if ($("vulnerable-population")) $("vulnerable-population").textContent = data.elderly_children_population ? Number(data.elderly_children_population).toLocaleString("en-IN") : value;
+      if ($("overview-worker-population")) $("overview-worker-population").textContent = data.outdoor_worker_population ? Number(data.outdoor_worker_population).toLocaleString("en-IN") : value;
+      if ($("overview-vulnerable-population")) $("overview-vulnerable-population").textContent = data.elderly_children_population ? Number(data.elderly_children_population).toLocaleString("en-IN") : value;
     }
   }
   function renderCurrent(data) {
@@ -89,6 +101,15 @@
     if ($("priority-location")) $("priority-location").textContent = loc.name || "Selected area";
     if ($("priority-score")) $("priority-score").textContent = score;
     if ($("priority-band")) $("priority-band").textContent = band;
+    if ($("worker-risk")) $("worker-risk").textContent = band;
+    if ($("vulnerable-risk")) $("vulnerable-risk").textContent = band;
+    const priorityLabel = score >= 61 ? "HIGH PRIORITY" : score >= 41 ? "MODERATE PRIORITY" : "LOW PRIORITY";
+    if ($("worker-priority")) $("worker-priority").textContent = priorityLabel;
+    if ($("vulnerable-priority")) $("vulnerable-priority").textContent = priorityLabel;
+    if ($("overview-worker-risk")) $("overview-worker-risk").textContent = band;
+    if ($("overview-vulnerable-risk")) $("overview-vulnerable-risk").textContent = band;
+    if ($("overview-worker-priority")) $("overview-worker-priority").textContent = priorityLabel;
+    if ($("overview-vulnerable-priority")) $("overview-vulnerable-priority").textContent = priorityLabel;
     if ($("action-plan")) {
       const urgent = score >= 61;
       const actions = [

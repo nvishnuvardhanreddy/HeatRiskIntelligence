@@ -8,7 +8,7 @@
       <p class="eyebrow">CURRENT DECISION SIGNAL</p>
       <div class="decision-score"><strong id="decision-htsi">—</strong><span>HTSI / 100</span></div>
       <dl>
-        <dt>Population</dt><dd><span id="decision-population">Regional estimate</span><small id="population-source" class="status">ESTIMATED</small></dd>
+        <dt>Population</dt><dd><span id="decision-population">Select a location</span><small id="population-source" class="status">ESTIMATED</small></dd>
         <dt>Health-service pressure</dt><dd id="decision-hospital">Calculated signal</dd>
         <dt>Mortality risk signal</dt><dd id="decision-mortality">Calculated signal</dd>
         <dt>Health output</dt><dd id="decision-health">Calculated signal</dd>
@@ -24,14 +24,14 @@
       </ol>
     </article>
   </div>
-  <div class="section-heading compact-heading"><div><p class="eyebrow">EMERGENCY PRIORITISATION</p><h2>Which areas need help first?</h2></div><span class="status">WARD / REGIONAL CONTEXT</span></div>
+  <div class="section-heading compact-heading"><div><p class="eyebrow">EMERGENCY PRIORITISATION</p><h2>Which areas need help first?</h2></div><span class="status">LIVE AREA RANKING</span></div>
   <div class="priority-grid">
-    <article class="priority-card"><strong>#1</strong><h3 id="priority-location">Selected area</h3><b id="priority-score">—</b><span id="priority-band">Awaiting live HTSI</span><small>Population: <span id="priority-population">Regional estimate</span></small></article>
-    <article class="priority-card"><strong>#2</strong><h3>Nearby areas</h3><b>Regional signal</b><span>Thermal context</span><small>Population estimate</small></article>
-    <article class="priority-card"><strong>#3</strong><h3>District context</h3><b>Regional signal</b><span>Thermal context</span><small>Population estimate</small></article>
+    <article class="priority-card"><strong>#1</strong><h3 id="priority-location">Selected area</h3><b id="priority-score">—</b><span id="priority-band">Awaiting live HTSI</span><small>Population: <span id="priority-population">—</span></small><small>Distance: <span id="priority-distance">0 km</span></small></article>
+    <article class="priority-card"><strong>#2</strong><h3 id="nearby-area-2">Nearby area</h3><b id="nearby-score-2">—</b><span id="nearby-risk-2">Awaiting location</span><small>Population: <span id="nearby-population-2">—</span></small><small>Distance: <span id="nearby-distance-2">—</span></small></article>
+    <article class="priority-card"><strong>#3</strong><h3 id="district-name">District context</h3><b id="district-score">—</b><span id="district-risk">Awaiting location</span><small>Population: <span id="district-population">—</span></small><small>High-risk areas: <span id="district-high-risk">—</span></small></article>
   </div>
   <div class="section-heading compact-heading"><div><p class="eyebrow">VULNERABILITY & HEALTH PRIORITY</p><h2>Evidence before targeting</h2></div><span class="status">POPULATION CONTEXT</span></div>
-  <div class="table-wrap"><table><thead><tr><th>Group</th><th>Population</th><th>Risk</th><th>Priority</th></tr></thead><tbody><tr><td>Outdoor workers</td><td id="worker-population">Regional estimate</td><td>LIVE HTSI</td><td>CONTEXTUAL</td></tr><tr><td>Elderly / children</td><td id="vulnerable-population">Regional estimate</td><td>LIVE HTSI</td><td>CONTEXTUAL</td></tr></tbody></table></div>
+  <div class="table-wrap"><table><thead><tr><th>Group</th><th>Population</th><th>Risk</th><th>Priority</th></tr></thead><tbody><tr><td>Outdoor workers</td><td id="worker-population">—</td><td id="worker-risk">—</td><td id="worker-priority">—</td></tr><tr><td>Elderly / children</td><td id="vulnerable-population">—</td><td id="vulnerable-risk">—</td><td id="vulnerable-priority">—</td></tr></tbody></table></div>
   <div class="section-heading compact-heading"><div><p class="eyebrow">PRE-EMPTIVE INTERVENTION TRIGGERS</p><h2>Act before conditions peak</h2></div></div>
   <div id="intervention-triggers" class="trigger-grid">
     <div><strong>THERMAL RISK</strong><span>Waiting for a selected location</span></div>

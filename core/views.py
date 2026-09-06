@@ -1,5 +1,6 @@
 from django.http import JsonResponse
 from django.shortcuts import render
+from django.conf import settings
 from django.views.decorators.http import require_GET, require_http_methods
 
 from services.location_service import reverse_geocode as lookup_location
@@ -11,6 +12,7 @@ from weather.providers.base import WeatherUnavailable
 from weather.validation import forecast_anomalies, validate_observation
 from population.services.population_service import population_for_location
 from population.services.population_provider import PopulationUnavailable
+from services.nearby_risk_service import nearby_risk
 
 
 def _coordinates(request):
@@ -142,6 +144,17 @@ def population_location(request):
 
 
 @require_GET
+def nearby_risk_api(request):
+    try:
+        latitude, longitude = _coordinates(request)
+        return JsonResponse(nearby_risk(latitude, longitude))
+    except ValueError as exc:
+        return _error(str(exc))
+    except WeatherUnavailable as exc:
+        return _error(str(exc), 503)
+
+
+@require_GET
 def weather_current(request):
     try:
         latitude, longitude, observation, thermal = _current_payload(request)
@@ -209,12 +222,21 @@ def risk_current(request):
         hospital_impact = round(min(100, score * 0.55 + exposure * 0.25 + vulnerability * 0.2), 1)
         mortality = round(min(100, score * 0.5 + health_score * 0.3 + vulnerability * 0.2), 1)
         priority = round(min(100, score * 0.4 + exposure * 0.2 + vulnerability * 0.2 + health_score * 0.2), 1)
+        population = population_for_location(latitude, longitude)
+        total_population = max(0, int(population.get("population") or 0))
+        outdoor_rate = max(0, min(1, settings.OUTDOOR_WORKER_EXPOSURE_RATE))
+        vulnerable_rate = max(0, min(1, settings.ELDERLY_CHILDREN_RATE))
+        population["outdoor_worker_population"] = round(total_population * outdoor_rate)
+        population["elderly_children_population"] = round(total_population * vulnerable_rate)
+        population["total_population"] = total_population
+        population["population_source"] = population.get("population_source") or population.get("source")
         return JsonResponse({
             "location": lookup_location(latitude, longitude),
             "weather": observation,
             "thermal": thermal,
             "risk": {"score": score, "band": thermal["htsi"]["band"],
                      "label": "CALCULATED", "reason": risk_reason(observation, thermal)},
+            "population": population,
             "health": {"score": health["score"], "band": thermal["htsi"]["band"], "label": health["label"],
                        "exposure": exposure, "vulnerability": vulnerability,
                        "hospital_impact": hospital_impact, "mortality": mortality,

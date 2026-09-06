@@ -65,6 +65,16 @@ class ApiTests(TestCase):
         self.assertEqual(response.json()["status"], "ESTIMATED")
         self.assertGreater(response.json()["population"], 0)
 
+    @patch("core.views.nearby_risk", return_value={
+        "areas": [{"area": "Test City", "htsi": 52, "risk": "HIGH", "population": 1000}],
+        "district": {"name": "Test District", "average_htsi": 52, "risk": "HIGH"},
+    })
+    def test_nearby_risk_endpoint_returns_ranked_context(self, nearby):
+        response = self.client.get("/api/risk/nearby/?lat=17.7&lon=83.2")
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.json()["district"]["name"], "Test District")
+        self.assertEqual(response.json()["areas"][0]["htsi"], 52)
+
     @patch("core.views.get_forecast", return_value=[
         {"date": "2026-09-06", "temperature_min": 27, "temperature_max": 35,
          "humidity": 60, "wind_speed": 3, "solar_radiation": 500, "precipitation": 0, "source": "test"}
