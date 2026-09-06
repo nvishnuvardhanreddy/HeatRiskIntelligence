@@ -14,11 +14,20 @@
       const current = await GZ.get("/api/risk/current/", location);
       renderCurrent(current);
       renderPopulation(current.population || {});
-      const nearby = await GZ.get("/api/risk/nearby/", location);
-      renderNearby(nearby);
-      const forecast = await GZ.get("/api/weather/forecast/", location);
-      renderForecast(forecast.forecast || []);
-      $("location-message").textContent = "Updated from the live provider.";
+      let optionalStatus = "Updated from the live provider.";
+      try {
+        const nearby = await GZ.get("/api/risk/nearby/", location);
+        renderNearby(nearby);
+      } catch (nearbyError) {
+        optionalStatus = "Live weather updated. Nearby area ranking is temporarily unavailable.";
+      }
+      try {
+        const forecast = await GZ.get("/api/weather/forecast/", location);
+        renderForecast(forecast.forecast || []);
+      } catch (forecastError) {
+        optionalStatus = "Live weather updated. Forecast is temporarily unavailable.";
+      }
+      $("location-message").textContent = optionalStatus;
     } catch (error) {
       showError(error.message + " Live weather data is not replaced with demo values.");
       $("location-message").textContent = "Try another location or try again shortly.";

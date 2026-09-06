@@ -222,7 +222,10 @@ def risk_current(request):
         hospital_impact = round(min(100, score * 0.55 + exposure * 0.25 + vulnerability * 0.2), 1)
         mortality = round(min(100, score * 0.5 + health_score * 0.3 + vulnerability * 0.2), 1)
         priority = round(min(100, score * 0.4 + exposure * 0.2 + vulnerability * 0.2 + health_score * 0.2), 1)
-        population = population_for_location(latitude, longitude)
+        try:
+            population = population_for_location(latitude, longitude)
+        except PopulationUnavailable:
+            population = {"status": "NOT REPORTED", "population": None}
         total_population = max(0, int(population.get("population") or 0))
         outdoor_rate = max(0, min(1, settings.OUTDOOR_WORKER_EXPOSURE_RATE))
         vulnerable_rate = max(0, min(1, settings.ELDERLY_CHILDREN_RATE))

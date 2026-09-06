@@ -3,6 +3,8 @@ from unittest.mock import patch
 from django.test import SimpleTestCase, TestCase
 from django.urls import reverse
 from services.solar import estimate_solar_radiation
+from weather.providers.base import WeatherUnavailable
+from population.services.population_provider import PopulationUnavailable
 
 
 SAMPLE_CURRENT = {
@@ -61,6 +63,17 @@ class ApiTests(TestCase):
         self.assertIn("thermal", body)
         self.assertEqual(body["risk"]["label"], "CALCULATED")
         self.assertEqual(body["health"]["label"], "CALCULATED")
+
+    @patch("core.views.population_for_location", side_effect=PopulationUnavailable)
+    @patch("core.views.lookup_location", return_value={
+        "name": "Test City", "admin_area": "Test State", "country": "India",
+        "latitude": 17.7, "longitude": 83.2,
+    })
+    @patch("core.views.get_current", return_value=SAMPLE_CURRENT)
+    def test_current_weather_survives_population_outage(self, current, location, population):
+        response = self.client.get("/api/risk/current/?lat=17.7&lon=83.2")
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.json()["population"]["status"], "NOT REPORTED")
 
     def test_invalid_coordinates_are_rejected(self):
         response = self.client.get("/api/weather/current/?lat=200&lon=20")
