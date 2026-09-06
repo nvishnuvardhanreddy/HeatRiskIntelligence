@@ -3,8 +3,8 @@
 {% block content %}
 <section class="overview-hero">
   <p class="eyebrow">SMART INDIA HACKATHON 2026 · PROBLEM STATEMENT 26083</p>
-  <h1>Know the heat.<br><span>Understand the risk. Act early.</span></h1>
-  <p class="lede">GROUND ZERO is a Human Thermal Stress Early Warning and GIS Intelligence platform for turning weather conditions into clear, explainable public-safety action.</p>
+  <h1>Predicting how<br><span>dangerous heat can become.</span></h1>
+  <p class="lede">GROUND ZERO combines real weather data, thermal indices, machine learning and GIS intelligence to understand human heat risk.</p>
   <div class="overview-actions"><button id="overview-detect" class="button primary">Detect my location</button><a class="button quiet" href="/dashboard/">Explore live risk</a><a class="button quiet" href="/dashboard/#location-search">Search location</a></div>
   <p id="overview-status" class="muted" role="status">Live weather is fetched through the Django backend. No synthetic weather is displayed.</p>
 </section>
@@ -35,7 +35,23 @@
   <article class="panel warning-panel"><p class="eyebrow">HEAT HEALTH WARNING</p><h2 id="warning-title">Waiting for live conditions</h2><p id="warning-text">Select a location to receive risk factors and practical safety guidance.</p><a class="button quiet" href="/alerts/">View heat-risk details</a></article>
 </section>
 <section class="info-section panel emergency-panel"><p class="eyebrow">HYPERLOCAL ACTION</p><h2>Emergency population targeting</h2><p>Population exposure figures are not shown without an authoritative dataset. Use the calculated risk level to guide local action and follow official advisories.</p><div class="tag-list"><span>Hydrate regularly</span><span>Take shade breaks</span><span>Reduce prolonged exposure</span><span>Check vulnerable people</span></div></section>
+<section class="info-section panel scenario-inline">
+  <div class="section-heading"><div><p class="eyebrow">WHAT IF CONDITIONS CHANGE?</p><h2>Explore a scenario</h2></div><span class="status">SIMULATION</span></div>
+  <p class="muted">Change the environmental inputs to calculate a scenario. These values are not live weather or a forecast.</p>
+  <form id="what-if-form" class="scenario-form">
+    <div><label for="scenario-temperature">Temperature (°C)</label><input id="scenario-temperature" name="temperature" type="number" value="35" min="-80" max="70" step="0.1" required></div>
+    <div><label for="scenario-humidity">Humidity (%)</label><input id="scenario-humidity" name="humidity" type="number" value="60" min="0" max="100" step="1" required></div>
+    <div><label for="scenario-wind">Wind (m/s)</label><input id="scenario-wind" name="wind_speed" type="number" value="2" min="0" step="0.1" required></div>
+    <div><label for="scenario-solar">Solar (W/m²)</label><input id="scenario-solar" name="solar_radiation" type="number" value="500" min="0" step="1" required></div>
+    <button class="button primary" type="submit">Calculate simulation</button>
+  </form>
+  <div id="scenario-error" class="notice error" hidden role="alert"></div><section id="scenario-result" class="scenario-result" aria-live="polite"><div class="empty-state">Enter values to calculate simulated thermal stress.</div></section>
+</section>
 <section class="info-section panel"><div class="section-heading"><div><p class="eyebrow">5-DAY HUMAN IMPACT OUTLOOK</p><h2>Daily forecast risk</h2></div><a class="text-link" href="/forecast/">Open full forecast →</a></div><div id="forecast-strip" class="forecast-strip"><div class="empty-state">Forecast data will load with a selected location.</div></div><canvas id="risk-chart" height="120" aria-label="Five-day HTSI chart"></canvas></section>
+<section class="info-section two-column">
+  <article class="panel"><p class="eyebrow">VULNERABILITY & HEALTH PRIORITY</p><h2>Evidence before targeting</h2><p>Population exposure and vulnerability percentages are <strong>DATA UNAVAILABLE</strong> until an authoritative demographic or health dataset is connected.</p><div class="table-wrap"><table><thead><tr><th>Group</th><th>Population</th><th>Risk</th><th>Priority</th></tr></thead><tbody><tr><td>Outdoor workers</td><td>DATA UNAVAILABLE</td><td>Use live HTSI</td><td>Contextual</td></tr><tr><td>Elderly / children</td><td>DATA UNAVAILABLE</td><td>Use live HTSI</td><td>Contextual</td></tr></tbody></table></div></article>
+  <article class="panel"><p class="eyebrow">DETAILED ANALYSIS PREVIEW</p><h2>Thermal signals</h2><p>Temperature, humidity, HTSI, WBGT and UTCI are available in the detailed analysis view.</p><a class="button quiet" href="/analysis/">Open detailed analysis</a></article>
+</section>
 <section class="info-section overview-grid">
   <article class="panel"><p class="eyebrow">THE PROBLEM</p><h2>Heat is more than temperature.</h2><p>Extreme heat affects people differently depending on humidity, wind, solar radiation, exposure and vulnerability. A single temperature value cannot communicate the complete human risk.</p></article>
   <article class="panel"><p class="eyebrow">WHY IT MATTERS</p><h2>Act before conditions peak.</h2><p>Clear thermal-stress information can support public awareness, outdoor-work planning, health guidance and earlier local action.</p></article>
@@ -85,4 +101,4 @@
 
 <section class="info-section closing-callout"><p class="eyebrow">GROUND ZERO · SIH 2026</p><h2>Understand the heat before it becomes a threat.</h2><p>Smart India Hackathon 2026 · Problem Statement 26083 · Ministry of Earth Sciences</p><div class="overview-actions"><button id="overview-detect-bottom" class="button primary">Detect my location</button><a class="button quiet" href="/dashboard/">Explore dashboard</a><a class="button quiet" href="/map/">View India risk map</a></div></section>
 {% endblock %}
-{% block scripts %}<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.4/dist/chart.umd.min.js"></script><script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script><script src="/static/js/dashboard.js"></script><script src="/static/js/overview.js"></script>{% endblock %}
+{% block scripts %}<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.4/dist/chart.umd.min.js"></script><script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script><script src="/static/js/dashboard.js"></script><script src="/static/js/what-if.js"></script><script src="/static/js/overview.js"></script>{% endblock %}
