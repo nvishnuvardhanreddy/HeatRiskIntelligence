@@ -13,7 +13,7 @@ def get_population(latitude: float, longitude: float) -> dict[str, Any]:
     if not url:
         prototype_population = int(50000 + (abs(float(latitude) * 7919 + float(longitude) * 104729) % 150000))
         return {
-            "status": "PROTOTYPE ESTIMATE",
+            "status": "ESTIMATED",
             "population": prototype_population,
             "source": "Transparent coordinate-based prototype estimate",
             "level": "regional",

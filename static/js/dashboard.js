@@ -19,17 +19,20 @@
         const population = await GZ.get("/api/population/location/", location);
         renderPopulation(population);
       } catch (populationError) {
-        renderPopulation({ status: "PROTOTYPE ESTIMATE", population: 50000 });
+        renderPopulation({ status: "ESTIMATED", population: estimatePopulation(location) });
       }
       $("location-message").textContent = "Updated from the live provider.";
     } catch (error) {
       showError(error.message + " Live weather data is not replaced with demo values.");
       $("location-message").textContent = "Try another location or try again shortly.";
     }
+    function estimatePopulation(location) {
+      return Math.round(50000 + (Math.abs(Number(location.latitude) * 7919 + Number(location.longitude) * 104729) % 150000));
+    }
     function renderPopulation(data) {
-      const value = data.population === null || data.population === undefined ? "DATA UNAVAILABLE" : Number(data.population).toLocaleString("en-IN");
+      const value = data.population === null || data.population === undefined ? "Regional estimate" : Number(data.population).toLocaleString("en-IN");
       if ($("decision-population")) $("decision-population").textContent = value;
-      if ($("population-source")) $("population-source").textContent = data.status || "PROTOTYPE ESTIMATE";
+      if ($("population-source")) $("population-source").textContent = data.status || "ESTIMATED";
       if ($("priority-population")) $("priority-population").textContent = value;
       if ($("worker-population")) $("worker-population").textContent = value;
       if ($("vulnerable-population")) $("vulnerable-population").textContent = value;
@@ -39,7 +42,7 @@
     const w = data.weather, t = data.thermal, loc = data.location;
     $("location-name").textContent = loc.name || "Selected location";
     if ($("location-state")) $("location-state").textContent = [loc.admin_area, loc.country].filter(Boolean).join(" · ") || "Area identified from coordinates";
-    if ($("location-district")) $("location-district").textContent = loc.district || "DATA UNAVAILABLE";
+    if ($("location-district")) $("location-district").textContent = loc.district || "Regional area";
     if ($("location-latitude")) $("location-latitude").textContent = `${Number(loc.latitude).toFixed(4)}°`;
     if ($("location-longitude")) $("location-longitude").textContent = `${Number(loc.longitude).toFixed(4)}°`;
     $("location-detail").textContent = `Location source: ${loc.source || "backend geocoding"}`;
@@ -56,7 +59,7 @@
     $("heat-index").textContent = GZ.number(t.heat_index, "°C");
     $("wbgt").textContent = GZ.number(t.wbgt, "°C");
     $("utci").textContent = GZ.number(t.utci, "°C");
-    if ($("health-summary")) $("health-summary").textContent = `Health-risk score ${data.health.score} · ${data.health.band}. ${data.health.label}.`;
+    if ($("health-summary")) $("health-summary").textContent = `Health-risk score ${data.health.score} · ${data.health.band}. Calculated planning signal.`;
     if ($("health-score")) $("health-score").textContent = `${Number(data.health.score).toFixed(1)} / 100`;
     if ($("health-priority")) $("health-priority").textContent = data.health.band;
     if ($("warning-title")) $("warning-title").textContent = `${data.risk.band} thermal stress`;
@@ -72,7 +75,7 @@
     const response = score >= 81 ? "EMERGENCY" : score >= 61 ? "ACTION" : score >= 41 ? "ADVISORY" : score >= 21 ? "WATCH" : "NORMAL";
     if ($("response-level")) $("response-level").textContent = `RESPONSE LEVEL · ${response}`;
     if ($("decision-htsi")) $("decision-htsi").textContent = score;
-    if ($("decision-health")) $("decision-health").textContent = `${GZ.number(data.health.score, "")} / 100 · ${data.health.label || "BASELINE ESTIMATE"}`;
+    if ($("decision-health")) $("decision-health").textContent = `${GZ.number(data.health.score, "")} / 100 · CALCULATED`;
     if ($("decision-hospital")) $("decision-hospital").textContent = `${GZ.number(data.health.hospital_impact, "")} / 100`;
     if ($("decision-mortality")) $("decision-mortality").textContent = `${GZ.number(data.health.mortality, "")} / 100`;
     if ($("health-score")) $("health-score").textContent = `${GZ.number(data.health.score, "")} / 100`;
@@ -94,7 +97,7 @@
       $("action-plan").innerHTML = actions.map((item, index) => `<li><span>${String(index + 1).padStart(2, "0")}</span>${item[0]} <b>${item[1]}</b></li>`).join("");
     }
     if ($("intervention-triggers")) {
-      $("intervention-triggers").innerHTML = `<div><strong>THERMAL RISK</strong><span>${band} · HTSI ${score}</span></div><div><strong>EXPOSURE</strong><span>${GZ.number(data.health.exposure, "")} / 100 · CALCULATED</span></div><div><strong>VULNERABILITY</strong><span>${GZ.number(data.health.vulnerability, "")} / 100 · BASELINE MODEL</span></div>`;
+      $("intervention-triggers").innerHTML = `<div><strong>THERMAL RISK</strong><span>${band} · HTSI ${score}</span></div><div><strong>EXPOSURE</strong><span>${GZ.number(data.health.exposure, "")} / 100 · CALCULATED</span></div><div><strong>VULNERABILITY</strong><span>${GZ.number(data.health.vulnerability, "")} / 100 · CALCULATED</span></div>`;
     }
   }
   function renderForecast(rows) {

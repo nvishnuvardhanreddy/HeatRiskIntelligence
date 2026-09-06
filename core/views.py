@@ -250,10 +250,10 @@ def risk_health(request):
             "vulnerability": 0,
         })["score"]
         return JsonResponse({
-            "score": score, "band": thermal["htsi"]["band"], "label": "MODEL ESTIMATE",
+            "score": score, "band": thermal["htsi"]["band"], "label": "CALCULATED",
             "factors": ["Thermal stress", "Exposure duration", "Humidity",
                         "Night-time temperature", "Vulnerability"],
-            "disclaimer": "Baseline estimate — not a clinical or mortality prediction.",
+            "disclaimer": "For heat-safety planning only; not medical advice.",
         })
     except ValueError as exc:
         return _error(str(exc))

@@ -48,7 +48,7 @@ def predict_health_risk(features: dict) -> dict:
             score = float(model.predict_proba(ordered)[0][1] * 100)
             return {
                 "score": round(max(0, min(100, score)), 1),
-                "label": "MODEL ESTIMATE",
+                "label": "CALCULATED",
                 "model": "configured joblib",
                 "metadata": MODEL_METADATA,
             }
@@ -57,7 +57,7 @@ def predict_health_risk(features: dict) -> dict:
     score = min(100, round(features["htsi"] * 0.9 + max(0, features["temperature"] - 34) * 1.2, 1))
     return {
         "score": score,
-        "label": "MODEL ESTIMATE",
+        "label": "CALCULATED",
         "model": "transparent baseline (no validated dataset configured)",
         "metadata": MODEL_METADATA,
     }

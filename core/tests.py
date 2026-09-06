@@ -52,7 +52,7 @@ class ApiTests(TestCase):
         body = response.json()
         self.assertIn("thermal", body)
         self.assertEqual(body["risk"]["label"], "CALCULATED")
-        self.assertEqual(body["health"]["label"], "MODEL ESTIMATE")
+        self.assertEqual(body["health"]["label"], "CALCULATED")
 
     def test_invalid_coordinates_are_rejected(self):
         response = self.client.get("/api/weather/current/?lat=200&lon=20")
@@ -62,7 +62,7 @@ class ApiTests(TestCase):
     def test_population_endpoint_is_explicit_when_unconfigured(self):
         response = self.client.get("/api/population/location/?lat=17.7&lon=83.2")
         self.assertEqual(response.status_code, 200)
-        self.assertEqual(response.json()["status"], "PROTOTYPE ESTIMATE")
+        self.assertEqual(response.json()["status"], "ESTIMATED")
         self.assertGreater(response.json()["population"], 0)
 
     @patch("core.views.get_forecast", return_value=[
