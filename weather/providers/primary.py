@@ -1,4 +1,5 @@
 from datetime import datetime
+import logging
 from typing import Any
 
 import requests
@@ -6,6 +7,8 @@ from time import sleep
 from django.conf import settings
 
 from .base import WeatherProvider, WeatherUnavailable
+
+logger = logging.getLogger(__name__)
 
 
 class OpenMeteoProvider(WeatherProvider):
@@ -17,9 +20,7 @@ class OpenMeteoProvider(WeatherProvider):
         last_error = None
         for attempt in range(3):
             try:
-                session = requests.Session()
-                session.trust_env = False
-                response = session.get(
+                response = requests.get(
                     url,
                     params=params,
                     timeout=max(10, settings.WEATHER_REQUEST_TIMEOUT),
@@ -32,6 +33,7 @@ class OpenMeteoProvider(WeatherProvider):
                 return payload
             except (requests.RequestException, ValueError) as exc:
                 last_error = exc
+                logger.warning("Open-Meteo request failed (attempt %s/3): %s", attempt + 1, exc)
                 if attempt < 2:
                     sleep(0.5 * (attempt + 1))
         raise WeatherUnavailable("The weather provider is temporarily unavailable.") from last_error
